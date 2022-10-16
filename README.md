@@ -10,13 +10,36 @@
 
 </div>
 
-## For each subject there will be a separate folder containing folders with tasks. When new tasks are issued, new folders and clickable links will appear:
+For each subject there will be a separate folder containing folders with tasks. When new tasks are issued, new folders and clickable links will appear
 
-- Modeling of information systems
-- Simulation of operations
-- Software security issues
-- Database design
-- Functional and logical programming
-- Artificial intelligence systems
-- CUDA Programming Technologies
-- Technological practice
+> "The main thing is order in the head. But we're growing up, aren't we? Having mastered the old old, you can take up the new old (for now and if it is unsafe)"
+
+### Modeling of information systems
+
+
+
+### Simulation of operations
+
+
+
+### Software security issues
+
+
+
+### Database design
+
+
+
+### Functional and logical programming
+
+
+
+### Artificial intelligence systems
+
+
+
+### CUDA Programming Technologies
+
+
+
+### Technological practice
