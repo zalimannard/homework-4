@@ -1,0 +1,13 @@
+.gradle/
+.idea/
+build/
+gradle/
+
+gradlew
+gradlew.bat
+soo-lab-2.log
+
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
