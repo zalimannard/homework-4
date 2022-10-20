@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MathMethods {
-    public Long hungarianMethodThrowNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
+    public Long hungarianMethodThroughNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
         ArrayList<ArrayList<String>> table = new ArrayList<>(startTable);
         ArrayList<ArrayList<String>> answer = northwestCorner(table);
+        System.out.println("После метода северо-западного угла цена: " + calcPrice(table, answer) + " руб");
+
 
         return null;
     }
@@ -128,6 +130,18 @@ public class MathMethods {
             System.out.println();
         }
 
+        return answer;
+    }
+
+    public Long calcPrice(ArrayList<ArrayList<String>> costs, ArrayList<ArrayList<String>> roads) {
+        Long answer = 0L;
+        for (int i = 1; i < costs.size() - 1; ++i) {
+            for (int j = 1; j < costs.get(0).size() - 1; ++j) {
+                Long cost = Long.valueOf(costs.get(i).get(j));
+                Long road = Long.valueOf(roads.get(i).get(j));
+                answer += cost * road;
+            }
+        }
         return answer;
     }
 

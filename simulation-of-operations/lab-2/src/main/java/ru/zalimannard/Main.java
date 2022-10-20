@@ -12,7 +12,7 @@ public class Main {
         Utils.printTable(table, "Считанные данные:");
 
         MathMethods mathMethods = new MathMethods();
-        System.out.println(mathMethods.hungarianMethodThrowNorthwestCorner(table));
+        System.out.println(mathMethods.hungarianMethodThroughNorthwestCorner(table));
 //        System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
 
 //        table = readTable();
