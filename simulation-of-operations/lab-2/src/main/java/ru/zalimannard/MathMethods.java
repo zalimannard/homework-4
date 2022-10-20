@@ -4,13 +4,103 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MathMethods {
-    public Long hungarianMethodThroughNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
+    public Long potentialMethodThroughNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
         ArrayList<ArrayList<String>> table = new ArrayList<>(startTable);
-        ArrayList<ArrayList<String>> answer = northwestCorner(table);
-        System.out.println("После метода северо-западного угла цена: " + calcPrice(table, answer) + " руб");
+        ArrayList<ArrayList<String>> answerNorthwestCorner = northwestCorner(table);
+        System.out.println("После метода северо-западного угла цена: " + calcPrice(table, answerNorthwestCorner) + " руб");
+        System.out.println();
 
+        // Вычисление потенциалов
+        ArrayList<ArrayList<String>> potentials = Utils.cloneArrayListArrayListString(answerNorthwestCorner);
+        for (int i = 1; i < potentials.size(); ++i) {
+            potentials.get(i).set(potentials.get(i).size() - 1, "X");
+            potentials.get(potentials.size() - 1).set(i, "X");
+        }
+        for (int i = 1; i < potentials.size() - 1; ++i) {
+            for (int j = 1; j < potentials.get(i).size() - 1; ++j) {
+                if (potentials.get(i).get(j).equals("0")) {
+                    potentials.get(i).set(j, "X");
+                }
+            }
+        }
+
+        Utils.printTable(potentials, "Подготовка к проверке потенциалами:");
+        if (getVariableNumber(potentials) < potentials.size() + potentials.get(0).size() - 5) {
+            System.out.println("План перевозок вырожденный: " + getVariableNumber(potentials) + " клеток. Нужно добавить новые");
+            System.out.println();
+
+            for (int i = 1; i < potentials.size() - 1; ++i) {
+                for (int j = 1; j < potentials.get(i).size() - 1; ++j) {
+
+                    if (potentials.get(i).get(j).equals("X")) {
+
+
+                        boolean isOk = true;
+                        for (int ii = 1; ii < potentials.size() - 1; ++ii) {
+                            for (int jj = 1; jj < potentials.get(ii).size() - 1; ++jj) {
+
+                                if ((i != ii) && (j != jj)) {
+                                    int counter = 0;
+                                    if (!potentials.get(ii).get(jj).equals("X")) {
+                                        counter += 1;
+                                    }
+                                    if (!potentials.get(i).get(jj).equals("X")) {
+                                        counter += 1;
+                                    }
+                                    if (!potentials.get(ii).get(j).equals("X")) {
+                                        counter += 1;
+                                    }
+
+                                    System.out.println(i + " " + j + " " + ii + " " + jj);
+
+                                    if (counter == 3) {
+                                        isOk = false;
+                                    }
+                                }
+                            }
+                        }
+                        if ((isOk) && ((getVariableNumber(potentials) < potentials.size() + potentials.get(0).size() - 5))) {
+                            potentials.get(i).set(j, "0");
+                        }
+
+                    }
+                }
+            }
+            Utils.printTable(potentials, "Теперь план невырожденный:");
+        } else {
+            System.out.println("План перевозок невырожденный");
+            System.out.println();
+        }
+
+//        while (!isPotentialsReady(potentials)) {
+//
+//        }
 
         return null;
+    }
+
+    private int getVariableNumber(ArrayList<ArrayList<String>> table) {
+        int answer = 0;
+        for (int i = 1; i < table.size() - 1; ++i) {
+            for (int j = 1; j < table.get(i).size() - 1; ++j) {
+                if (!table.get(i).get(j).equals("X")) {
+                    answer += 1;
+                }
+            }
+        }
+        return answer;
+    }
+
+    private boolean isPotentialsReady(ArrayList<ArrayList<String>> table) {
+        for (int i = 1; i < table.size() - 1; ++i) {
+            if (table.get(i).get(table.get(i).size() - 1).equals("X")) {
+                return false;
+            }
+            if (table.get(table.size() - 1).get(i).equals(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public ArrayList<ArrayList<String>> northwestCorner(ArrayList<ArrayList<String>> startTable) {
