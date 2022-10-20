@@ -6,11 +6,13 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 public class Main {
-    private static Logger logger = LogManager.getRootLogger();
 
     public static void main(String[] args) {
         ArrayList<ArrayList<String>> table = readTable();
         printTable(table);
+
+        MathMethods mathMethods = new MathMethods();
+        System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
     }
 
     private static ArrayList<ArrayList<String>> readTable() {
