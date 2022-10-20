@@ -8,17 +8,18 @@ import java.util.ArrayList;
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<ArrayList<String>> table = readTable();
-        printTable(table);
+        ArrayList<ArrayList<String>> table = readTables();
+        Utils.printTable(table, "Считанные данные:");
 
         MathMethods mathMethods = new MathMethods();
-        System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
+        System.out.println(mathMethods.hungarianMethodThrowNorthwestCorner(table));
+//        System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
 
-        table = readTable();
-        System.out.println("Методом минимальных стоимостей: " + mathMethods.minimalCost(table) + " руб");
+//        table = readTable();
+//        System.out.println("Методом минимальных стоимостей: " + mathMethods.minimalCost(table) + " руб");
     }
 
-    private static ArrayList<ArrayList<String>> readTable() {
+    private static ArrayList<ArrayList<String>> readTables() {
         CsvFileReader csvFileReader = new CsvFileReader();
 
         ArrayList<ArrayList<String>> table = csvFileReader.read("transportation-cost.csv");
@@ -39,11 +40,5 @@ public class Main {
         table.add(lastLine);
 
         return table;
-    }
-
-    private static void printTable(ArrayList<ArrayList<String>> table) {
-        for (ArrayList<String> line : table) {
-            System.out.println(line);
-        }
     }
 }

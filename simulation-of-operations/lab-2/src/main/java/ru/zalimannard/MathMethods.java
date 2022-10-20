@@ -1,59 +1,74 @@
 package ru.zalimannard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MathMethods {
-    public Long northwestCorner(ArrayList<ArrayList<String>> table) {
+    public Long hungarianMethodThrowNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
+        ArrayList<ArrayList<String>> table = new ArrayList<>(startTable);
+        ArrayList<ArrayList<String>> answer = northwestCorner(table);
+
+        return null;
+    }
+
+    public ArrayList<ArrayList<String>> northwestCorner(ArrayList<ArrayList<String>> startTable) {
+        ArrayList<ArrayList<String>> table = Utils.cloneArrayListArrayListString(startTable);
+        ArrayList<ArrayList<String>> answer = createCleanTable(table);
         Long product = 0L;
         Long request = 0L;
 
         for (int i = 1; i < table.get(0).size() - 1; ++i) {
             product += Long.parseLong(table.get(table.size() - 1).get(i));
         }
-        System.out.println("Всего товара есть: " + product);
+        System.out.println("Общее количество товара: " + product);
         for (int i = 1; i < table.size() - 1; ++i) {
             request += Long.parseLong(table.get(i).get(table.size() - 1));
         }
-        System.out.println("Всего товара надо: " + request);
-        if (!request.equals(product)) {
-            System.out.println("Баланса нет");
-            return -1L;
+        System.out.println("Общее требуемое количество: " + request);
+        if (!product.equals(request)) {
+            throw new IllegalArgumentException("Несбалансированная таблица");
         }
-        System.out.println();
-
 
         int posX = 1;
         int posY = 1;
-        Long answer = 0L;
+        System.out.println("request: " + request);
         while (request != 0) {
             Long transported = Math.min(
                     Long.parseLong(table.get(posY).get(table.size() - 1)),
                     Long.parseLong(table.get(table.size() - 1).get(posX))
             );
             request -= transported;
-            Long sum = transported * Long.parseLong(table.get(posY).get(posX));
-            answer += sum;
-            System.out.println(table.get(posY).get(0) + "->" + table.get(0).get(posX) + ": " + transported + " | " + sum + "/" + answer);
+            // Обновление значений в возвращаемой таблице
+            // Самого значения
+            answer.get(posY).set(posX, String.valueOf(transported));
+            // Справа
+            answer.get(posY).set(answer.get(0).size() - 1,
+                    String.valueOf(Long.parseLong(answer.get(posY).get(answer.get(0).size() - 1)) + transported));
+            // Снизу
+            answer.get(answer.size() - 1).set(posX,
+                    String.valueOf(Long.parseLong(answer.get(answer.size() - 1).get(posX)) + transported));
+            // Сумма
+            answer.get(answer.size() - 1).set(answer.get(answer.size() - 1).size() - 1,
+                    String.valueOf(Long.parseLong(answer.get(answer.size() - 1).get(answer.get(answer.size() - 1).size() - 1)) + transported));
 
-            String newRightValue = String.valueOf(Long.parseLong(table.get(posY).get(table.size() - 1)) - transported);
-            String newDownValue = String.valueOf(Long.parseLong(table.get(table.size() - 1).get(posX)) - transported);
-            table.get(posY).remove(table.size() - 1);
-            table.get(posY).add(newRightValue);
-            table.get(table.size() - 1).remove(posX);
-            table.get(table.size() - 1).add(posX, newDownValue);
-//
-            if (newRightValue.equals("0")) {
-                posY += 1;
-            }
-            if (newDownValue.equals("0")) {
+            // Обновление значений нужных и возможных поставок
+            table.get(posY).set(table.get(0).size() - 1,
+                    String.valueOf(Long.parseLong(table.get(posY).get(table.get(0).size() - 1)) - transported));
+            table.get(table.size() - 1).set(posX,
+                    String.valueOf(Long.parseLong(table.get(table.size() - 1).get(posX)) - transported));
+
+            // Сдвиг по лесенке
+            if (table.get(table.size() - 1).get(posX).equals("0")) {
                 posX += 1;
             }
+            if (table.get(posY).get(table.get(posY).size() - 1).equals("0")) {
+                posY += 1;
+            }
 
-            printTable(table);
-            System.out.println();
+            Utils.printTable(answer, "Очередная таблица в методе северо-западного угла: ");
         }
 
-
+        Utils.printTable(answer, "Таблица после метода северо-западного угла: ");
         return answer;
     }
 
@@ -109,16 +124,20 @@ public class MathMethods {
             table.get(table.size() - 1).remove(posX);
             table.get(table.size() - 1).add(posX, newDownValue);
 
-            printTable(table);
+//            printTable(table);
             System.out.println();
         }
 
         return answer;
     }
 
-    private void printTable(ArrayList<ArrayList<String>> table) {
-        for (ArrayList<String> line : table) {
-            System.out.println(line);
+    private ArrayList<ArrayList<String>> createCleanTable(ArrayList<ArrayList<String>> otherTable) {
+        ArrayList<ArrayList<String>> table = Utils.cloneArrayListArrayListString(otherTable);
+        for (int i = 1; i < table.size(); ++i) {
+            for (int j = 1; j < table.get(0).size(); ++j) {
+                table.get(i).set(j, "0");
+            }
         }
+        return table;
     }
 }
