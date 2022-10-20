@@ -24,19 +24,19 @@ public class MathMethods {
         }
         System.out.println("Общее количество товара: " + product);
         for (int i = 1; i < table.size() - 1; ++i) {
-            request += Long.parseLong(table.get(i).get(table.size() - 1));
+            request += Long.parseLong(table.get(i).get(table.get(i).size() - 1));
         }
         System.out.println("Общее требуемое количество: " + request);
         if (!product.equals(request)) {
             throw new IllegalArgumentException("Несбалансированная таблица");
         }
+        System.out.println();
 
         int posX = 1;
         int posY = 1;
-        System.out.println("request: " + request);
         while (request != 0) {
             Long transported = Math.min(
-                    Long.parseLong(table.get(posY).get(table.size() - 1)),
+                    Long.parseLong(table.get(posY).get(table.get(posY).size() - 1)),
                     Long.parseLong(table.get(table.size() - 1).get(posX))
             );
             request -= transported;

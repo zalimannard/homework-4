@@ -7,7 +7,7 @@ public abstract class Utils {
         System.out.println(text);
         int maxItemLength = getMaximumStringLengthForPrint(table);
         for (ArrayList<String> line : table) {
-            for (int i = 0; i < table.size() * (maxItemLength + 3) + 1; ++i) {
+            for (int i = 0; i < table.get(0).size() * (maxItemLength + 3) + 1; ++i) {
                 System.out.print("~");
             }
             System.out.println();
@@ -20,7 +20,7 @@ public abstract class Utils {
             }
             System.out.println();
         }
-        for (int i = 0; i < table.size() * (maxItemLength + 3) + 1; ++i) {
+        for (int i = 0; i < table.get(0).size() * (maxItemLength + 3) + 1; ++i) {
             System.out.print("~");
         }
         System.out.println();

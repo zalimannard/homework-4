@@ -39,6 +39,9 @@ public class Main {
         lastLine.add("");
         table.add(lastLine);
 
+        table.get(0).set(table.get(0).size() - 1, "Поставок");
+        table.get(table.size() - 1).set(0, "Потребления");
+
         return table;
     }
 }
