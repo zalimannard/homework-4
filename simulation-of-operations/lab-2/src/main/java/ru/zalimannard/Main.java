@@ -13,6 +13,9 @@ public class Main {
 
         MathMethods mathMethods = new MathMethods();
         System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
+
+        table = readTable();
+        System.out.println("Методом минимальных стоимостей: " + mathMethods.minimalCost(table) + " руб");
     }
 
     private static ArrayList<ArrayList<String>> readTable() {
