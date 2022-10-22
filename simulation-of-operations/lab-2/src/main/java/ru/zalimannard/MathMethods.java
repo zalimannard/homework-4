@@ -10,6 +10,9 @@ public class MathMethods {
         Table preparedTable = prepareForThePotentialMethod(northwestCornerTable);
         System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
 
+        Table potentialTable = calcPotentials(preparedTable, table);
+        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
+
         return 0;
     }
 
@@ -125,6 +128,42 @@ public class MathMethods {
         }
 
         return currentNumberOfNumbersInTheBasis >= requiredNumberOfNumbersInTheBasis;
+    }
+
+    private Table calcPotentials(Table transportationTable, Table priceTable) {
+        Table table = new Table(transportationTable);
+        table.fill(1, 1, table.getWidth(), table.getHeight(), "X");
+        table.set(table.getWidth() - 1, 1, "0");
+
+        // Заранее не знаем количество нужных проверок, берём наверняка
+        for (int repeats = 1; repeats < table.getHeight() - 1; ++repeats) {
+            // Для каждого известного потенциала справа находим доступные потенциалы снизу
+            for (int y = 1; y < table.getHeight() - 1; ++y) {
+                if (!table.get(table.getWidth() - 1, y).equals("X")) {
+
+                    for (int x = 1; x < table.getWidth() - 1; ++x) {
+                        if (!transportationTable.get(x, y).equals("X")) {
+                            table.set(x, table.getHeight() - 1,
+                                    String.valueOf(Long.parseLong(priceTable.get(x, y))
+                                            - Long.parseLong(table.get(table.getWidth() - 1, y))
+                                    ));
+
+                            // Для найденного потенциала снизу находим все доступные потенциалы снизу
+                            for (int y2 = 1; y2 < table.getHeight() - 1; ++y2) {
+                                if (!transportationTable.get(x, y2).equals("X")) {
+
+                                    table.set(table.getWidth() - 1, y2,
+                                            String.valueOf(Long.parseLong(priceTable.get(x, y2))
+                                            - Long.parseLong(table.get(x, table.getHeight() - 1))));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return table;
     }
 
     public Long minimalCost(ArrayList<ArrayList<String>> table) {
