@@ -13,6 +13,9 @@ public class MathMethods {
         Table potentialTable = calcPotentials(preparedTable, table);
         System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
 
+        Table deltaTable = calcDeltas(potentialTable, table, preparedTable);
+        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
+
         return 0;
     }
 
@@ -159,6 +162,25 @@ public class MathMethods {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        return table;
+    }
+
+    private Table calcDeltas(Table potentials, Table prices, Table basis) {
+        Table table = new Table(potentials);
+        table.fill(1, 1, table.getWidth(), table.getHeight(), "X");
+
+        for (int x = 1; x < table.getWidth() - 1; ++x) {
+            for (int y = 1; y < table.getHeight() - 1; ++y) {
+                if (basis.get(x, y).equals("X")) {
+                    table.set(x, y, String.valueOf(
+                            Long.parseLong(potentials.get(x, potentials.getHeight() - 1))
+                            + Long.parseLong(potentials.get(potentials.getWidth() - 1, y))
+                            - Long.parseLong(prices.get(x, y))
+                    ));
                 }
             }
         }
