@@ -1,167 +1,130 @@
 package ru.zalimannard;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MathMethods {
-    public Long potentialMethodThroughNorthwestCorner(ArrayList<ArrayList<String>> startTable) {
-        ArrayList<ArrayList<String>> table = new ArrayList<>(startTable);
-        ArrayList<ArrayList<String>> answerNorthwestCorner = northwestCorner(table);
-        System.out.println("После метода северо-западного угла цена: " + calcPrice(table, answerNorthwestCorner) + " руб");
-        System.out.println();
+    public long calcSumThroughPotentialAndNorthwestCornerMethods(Table table) {
+        Table northwestCornerTable = calcBasicPlanUsingNorthwestCorner(table);
+        System.out.println("\nТаблица после метода северозападного угла:\n" + northwestCornerTable);
 
-        // Вычисление потенциалов
-        ArrayList<ArrayList<String>> potentials = Utils.cloneArrayListArrayListString(answerNorthwestCorner);
-        for (int i = 1; i < potentials.size(); ++i) {
-            potentials.get(i).set(potentials.get(i).size() - 1, "X");
-            potentials.get(potentials.size() - 1).set(i, "X");
-        }
-        for (int i = 1; i < potentials.size() - 1; ++i) {
-            for (int j = 1; j < potentials.get(i).size() - 1; ++j) {
-                if (potentials.get(i).get(j).equals("0")) {
-                    potentials.get(i).set(j, "X");
-                }
-            }
-        }
+        Table preparedTable = prepareForThePotentialMethod(northwestCornerTable);
+        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
 
-        Utils.printTable(potentials, "Подготовка к проверке потенциалами:");
-        if (getVariableNumber(potentials) < potentials.size() + potentials.get(0).size() - 5) {
-            System.out.println("План перевозок вырожденный: " + getVariableNumber(potentials) + " клеток. Нужно добавить новые");
-            System.out.println();
-
-            for (int i = 1; i < potentials.size() - 1; ++i) {
-                for (int j = 1; j < potentials.get(i).size() - 1; ++j) {
-
-                    if (potentials.get(i).get(j).equals("X")) {
-
-
-                        boolean isOk = true;
-                        for (int ii = 1; ii < potentials.size() - 1; ++ii) {
-                            for (int jj = 1; jj < potentials.get(ii).size() - 1; ++jj) {
-
-                                if ((i != ii) && (j != jj)) {
-                                    int counter = 0;
-                                    if (!potentials.get(ii).get(jj).equals("X")) {
-                                        counter += 1;
-                                    }
-                                    if (!potentials.get(i).get(jj).equals("X")) {
-                                        counter += 1;
-                                    }
-                                    if (!potentials.get(ii).get(j).equals("X")) {
-                                        counter += 1;
-                                    }
-
-                                    System.out.println(i + " " + j + " " + ii + " " + jj);
-
-                                    if (counter == 3) {
-                                        isOk = false;
-                                    }
-                                }
-                            }
-                        }
-                        if ((isOk) && ((getVariableNumber(potentials) < potentials.size() + potentials.get(0).size() - 5))) {
-                            potentials.get(i).set(j, "0");
-                        }
-
-                    }
-                }
-            }
-            Utils.printTable(potentials, "Теперь план невырожденный:");
-        } else {
-            System.out.println("План перевозок невырожденный");
-            System.out.println();
-        }
-
-//        while (!isPotentialsReady(potentials)) {
-//
-//        }
-
-        return null;
+        return 0;
     }
 
-    private int getVariableNumber(ArrayList<ArrayList<String>> table) {
-        int answer = 0;
-        for (int i = 1; i < table.size() - 1; ++i) {
-            for (int j = 1; j < table.get(i).size() - 1; ++j) {
-                if (!table.get(i).get(j).equals("X")) {
-                    answer += 1;
-                }
-            }
-        }
-        return answer;
-    }
+    private Table calcBasicPlanUsingNorthwestCorner(Table targetTable) {
+        Table table = new Table(targetTable);
+        Table answer = new Table(targetTable);
+        answer.fill(1, 1, answer.getWidth(), answer.getHeight(), "0");
 
-    private boolean isPotentialsReady(ArrayList<ArrayList<String>> table) {
-        for (int i = 1; i < table.size() - 1; ++i) {
-            if (table.get(i).get(table.get(i).size() - 1).equals("X")) {
-                return false;
-            }
-            if (table.get(table.size() - 1).get(i).equals(i)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public ArrayList<ArrayList<String>> northwestCorner(ArrayList<ArrayList<String>> startTable) {
-        ArrayList<ArrayList<String>> table = Utils.cloneArrayListArrayListString(startTable);
-        ArrayList<ArrayList<String>> answer = createCleanTable(table);
         Long product = 0L;
         Long request = 0L;
+        for (int i = 1; i < table.getHeight() - 1; ++i) {
+            product += Long.parseLong(table.get(table.getWidth() - 1, i));
+        }
+        System.out.println("\nОбщее количество товара: " + product);
+        for (int i = 1; i < table.getWidth() - 1; ++i) {
+            request += Long.parseLong(table.get(i, table.getHeight() - 1));
+        }
+        System.out.println("\nОбщее требуемое количество: " + request);
 
-        for (int i = 1; i < table.get(0).size() - 1; ++i) {
-            product += Long.parseLong(table.get(table.size() - 1).get(i));
-        }
-        System.out.println("Общее количество товара: " + product);
-        for (int i = 1; i < table.size() - 1; ++i) {
-            request += Long.parseLong(table.get(i).get(table.get(i).size() - 1));
-        }
-        System.out.println("Общее требуемое количество: " + request);
         if (!product.equals(request)) {
             throw new IllegalArgumentException("Несбалансированная таблица");
         }
-        System.out.println();
 
-        int posX = 1;
-        int posY = 1;
+        int x = 1;
+        int y = 1;
         while (request != 0) {
             Long transported = Math.min(
-                    Long.parseLong(table.get(posY).get(table.get(posY).size() - 1)),
-                    Long.parseLong(table.get(table.size() - 1).get(posX))
+                    Long.parseLong(table.get(x, table.getHeight() - 1)),
+                    Long.parseLong(table.get(table.getWidth() - 1, y))
             );
             request -= transported;
-            // Обновление значений в возвращаемой таблице
-            // Самого значения
-            answer.get(posY).set(posX, String.valueOf(transported));
-            // Справа
-            answer.get(posY).set(answer.get(0).size() - 1,
-                    String.valueOf(Long.parseLong(answer.get(posY).get(answer.get(0).size() - 1)) + transported));
-            // Снизу
-            answer.get(answer.size() - 1).set(posX,
-                    String.valueOf(Long.parseLong(answer.get(answer.size() - 1).get(posX)) + transported));
-            // Сумма
-            answer.get(answer.size() - 1).set(answer.get(answer.size() - 1).size() - 1,
-                    String.valueOf(Long.parseLong(answer.get(answer.size() - 1).get(answer.get(answer.size() - 1).size() - 1)) + transported));
 
-            // Обновление значений нужных и возможных поставок
-            table.get(posY).set(table.get(0).size() - 1,
-                    String.valueOf(Long.parseLong(table.get(posY).get(table.get(0).size() - 1)) - transported));
-            table.get(table.size() - 1).set(posX,
-                    String.valueOf(Long.parseLong(table.get(table.size() - 1).get(posX)) - transported));
+            answer.set(x, y, String.valueOf(transported));
+            answer.set(x, answer.getHeight() - 1,
+                    String.valueOf(transported + Long.parseLong(answer.get(x, answer.getHeight() - 1))));
+            answer.set(answer.getWidth() - 1, y,
+                    String.valueOf(transported + Long.parseLong(answer.get(answer.getWidth() - 1, y))));
+            answer.set(answer.getWidth() - 1, answer.getHeight() - 1, String.valueOf(
+                    transported + Long.parseLong(answer.get(answer.getWidth() - 1, answer.getHeight() - 1))));
 
-            // Сдвиг по лесенке
-            if (table.get(table.size() - 1).get(posX).equals("0")) {
-                posX += 1;
+            table.set(x, table.getHeight() - 1,
+                    String.valueOf(Long.parseLong(table.get(x, table.getHeight() - 1)) - transported));
+            table.set(table.getWidth() - 1, y,
+                    String.valueOf(Long.parseLong(table.get(table.getWidth() - 1, y)) - transported));
+
+            if (table.get(x, table.getHeight() - 1).equals("0")) {
+                ++x;
             }
-            if (table.get(posY).get(table.get(posY).size() - 1).equals("0")) {
-                posY += 1;
+            if (table.get(table.getWidth() - 1, y).equals("0")) {
+                ++y;
             }
 
-            Utils.printTable(answer, "Очередная таблица в методе северо-западного угла: ");
+            System.out.println("\nОчередная таблица в методе северозападного угла:\n" + answer);
         }
 
-        Utils.printTable(answer, "Таблица после метода северо-западного угла: ");
         return answer;
+    }
+
+    private Table prepareForThePotentialMethod(Table targetTable) {
+        Table table = new Table(targetTable);
+
+        // Нулей быть не должно. Они будут считаться как базисные элементы
+        for (int x = 1; x < table.getWidth(); ++x) {
+            for (int y = 1; y < table.getHeight(); ++y) {
+                if (table.get(x, y).equals("0")) {
+                    table.set(x, y, "X");
+                }
+            }
+        }
+        table.fill(1, table.getHeight() - 1,
+                table.getWidth(), table.getHeight(), "X");
+        table.fill(table.getWidth() - 1, 1,
+                table.getWidth(), table.getHeight(), "X");
+
+        if (!isTableReadyForThePotentialMethod(table)) {
+            System.out.println("\nПлан вырожденный. Нужно добавить новые базисные элементы");
+        }
+
+        // Добавление базисных элементов
+        for (int x1 = 1; x1 < table.getWidth() - 1; ++x1) {
+            for (int y1 = 1; y1 < table.getHeight() - 1; ++y1) {
+                if (table.get(x1, y1).equals("X")) {
+                    boolean isOk = true;
+                    for (int x2 = 1; x2 < table.getWidth() - 1; ++x2) {
+                        for (int y2 = 1; y2 < table.getHeight() - 1; ++y2) {
+                            if ((!table.get(x1, y2).equals("X"))
+                                    && (!table.get(x2, y1).equals("X"))
+                                    && (!table.get(x2, y2).equals("X"))) {
+                                isOk = false;
+                            }
+                        }
+                    }
+                    if ((isOk) && (!isTableReadyForThePotentialMethod(table))) {
+                        table.set(x1, y1, "0");
+                    }
+                }
+            }
+        }
+
+        return table;
+    }
+
+    private boolean isTableReadyForThePotentialMethod(Table table) {
+        int requiredNumberOfNumbersInTheBasis = table.getHeight() + table.getWidth() - 5;
+        int currentNumberOfNumbersInTheBasis = 0;
+
+        for (int x = 1; x < table.getWidth() - 1; ++x) {
+            for (int y = 1; y < table.getHeight() - 1; ++y) {
+                if (!table.get(x, y).equals("X")) {
+                    ++currentNumberOfNumbersInTheBasis;
+                }
+            }
+        }
+
+        return currentNumberOfNumbersInTheBasis >= requiredNumberOfNumbersInTheBasis;
     }
 
     public Long minimalCost(ArrayList<ArrayList<String>> table) {
@@ -221,27 +184,5 @@ public class MathMethods {
         }
 
         return answer;
-    }
-
-    public Long calcPrice(ArrayList<ArrayList<String>> costs, ArrayList<ArrayList<String>> roads) {
-        Long answer = 0L;
-        for (int i = 1; i < costs.size() - 1; ++i) {
-            for (int j = 1; j < costs.get(0).size() - 1; ++j) {
-                Long cost = Long.valueOf(costs.get(i).get(j));
-                Long road = Long.valueOf(roads.get(i).get(j));
-                answer += cost * road;
-            }
-        }
-        return answer;
-    }
-
-    private ArrayList<ArrayList<String>> createCleanTable(ArrayList<ArrayList<String>> otherTable) {
-        ArrayList<ArrayList<String>> table = Utils.cloneArrayListArrayListString(otherTable);
-        for (int i = 1; i < table.size(); ++i) {
-            for (int j = 1; j < table.get(0).size(); ++j) {
-                table.get(i).set(j, "0");
-            }
-        }
-        return table;
     }
 }

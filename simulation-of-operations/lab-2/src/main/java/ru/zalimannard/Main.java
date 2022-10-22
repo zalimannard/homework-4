@@ -1,47 +1,34 @@
 package ru.zalimannard;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.opencsv.exceptions.CsvValidationException;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class Main {
 
     public static void main(String[] args) {
-        ArrayList<ArrayList<String>> table = readTables();
-        Utils.printTable(table, "Считанные данные:");
+        if (args.length != 1) {
+            System.out.println("Неверное количество аргументов");
+            return;
+        }
+        TableReader tableReader = new TableReader();
+        Table table = null;
+        try {
+            table = tableReader.read(args[0]);
+        } catch (CsvValidationException e) {
+            System.out.println("Неудача с распознаванием CSV");
+            return;
+        } catch (IOException e) {
+            System.out.println("Ошибка ввода-вывода. Видимо, файла нет");
+            return;
+        }
+        System.out.println("Считанные данные:\n" + table);
 
         MathMethods mathMethods = new MathMethods();
-        System.out.println(mathMethods.potentialMethodThroughNorthwestCorner(table));
-//        System.out.println("Методом северо-западного угла: " + mathMethods.northwestCorner(table) + " руб");
+        System.out.println("Методом северо-западного угла: "
+                + mathMethods.calcSumThroughPotentialAndNorthwestCornerMethods(table) + " руб");
 
 //        table = readTable();
 //        System.out.println("Методом минимальных стоимостей: " + mathMethods.minimalCost(table) + " руб");
-    }
-
-    private static ArrayList<ArrayList<String>> readTables() {
-        CsvFileReader csvFileReader = new CsvFileReader();
-
-        ArrayList<ArrayList<String>> table = csvFileReader.read("transportation-cost.csv");
-        ArrayList<ArrayList<String>> consumers = csvFileReader.read("consumers.csv");
-        ArrayList<ArrayList<String>> suppliers = csvFileReader.read("suppliers.csv");
-
-        table.get(0).add("");
-        for (int i = 1; i < table.size(); ++i) {
-            table.get(i).add(suppliers.get(1).get(i - 1));
-        }
-
-        ArrayList<String> lastLine = new ArrayList<>();
-        lastLine.add("");
-        for (int i = 0; i < consumers.get(1).size(); ++i) {
-            lastLine.add(consumers.get(1).get(i));
-        }
-        lastLine.add("");
-        table.add(lastLine);
-
-        table.get(0).set(table.get(0).size() - 1, "Поставок");
-        table.get(table.size() - 1).set(0, "Потребления");
-
-        return table;
     }
 }
