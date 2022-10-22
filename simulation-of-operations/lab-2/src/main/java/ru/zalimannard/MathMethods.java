@@ -7,13 +7,14 @@ public class MathMethods {
         Table northwestCornerTable = calcBasicPlanUsingNorthwestCorner(table);
         System.out.println("\nТаблица после метода северозападного угла:\n" + northwestCornerTable);
 
-        if (isOptimalTransportationTable(northwestCornerTable, table)) {
-            System.out.println("\nТаблица оптимална\n");
-        } else {
-            System.out.println("\nТаблица не оптимальна\n");
+        while (!isOptimalTransportationTable(northwestCornerTable, table)) {
+            System.out.println("\nТаблица не оптимальна\n" + northwestCornerTable);
+            northwestCornerTable = improveThePlan(northwestCornerTable, table);
         }
 
-        return 0;
+        System.out.println("\nТаблица оптимална\n" + northwestCornerTable);
+
+        return calcPrice(northwestCornerTable, table);
     }
 
     private Table calcBasicPlanUsingNorthwestCorner(Table targetTable) {
@@ -87,10 +88,6 @@ public class MathMethods {
         table.fill(table.getWidth() - 1, 1,
                 table.getWidth(), table.getHeight(), "X");
 
-        if (!isTableReadyForThePotentialMethod(table)) {
-            System.out.println("\nПлан вырожденный. Нужно добавить новые базисные элементы");
-        }
-
         // Добавление базисных элементов
         for (int x1 = 1; x1 < table.getWidth() - 1; ++x1) {
             for (int y1 = 1; y1 < table.getHeight() - 1; ++y1) {
@@ -154,7 +151,7 @@ public class MathMethods {
 
                                     table.set(table.getWidth() - 1, y2,
                                             String.valueOf(Long.parseLong(priceTable.get(x, y2))
-                                            - Long.parseLong(table.get(x, table.getHeight() - 1))));
+                                                    - Long.parseLong(table.get(x, table.getHeight() - 1))));
                                 }
                             }
                         }
@@ -175,8 +172,8 @@ public class MathMethods {
                 if (basis.get(x, y).equals("X")) {
                     table.set(x, y, String.valueOf(
                             Long.parseLong(potentials.get(x, potentials.getHeight() - 1))
-                            + Long.parseLong(potentials.get(potentials.getWidth() - 1, y))
-                            - Long.parseLong(prices.get(x, y))
+                                    + Long.parseLong(potentials.get(potentials.getWidth() - 1, y))
+                                    - Long.parseLong(prices.get(x, y))
                     ));
                 }
             }
@@ -187,13 +184,13 @@ public class MathMethods {
 
     private boolean isOptimalTransportationTable(Table targetTable, Table priceTable) {
         Table preparedTable = prepareForThePotentialMethod(targetTable);
-        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
+//        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
 
         Table potentialTable = calcPotentials(preparedTable, priceTable);
-        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
+//        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
 
         Table deltaTable = calcDeltas(potentialTable, priceTable, preparedTable);
-        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
+//        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
 
         for (int x = 1; x < deltaTable.getWidth() - 1; ++x) {
             for (int y = 1; y < deltaTable.getHeight() - 1; ++y) {
@@ -205,6 +202,87 @@ public class MathMethods {
             }
         }
         return true;
+    }
+
+    private Table improveThePlan(Table plan, Table priceTable) {
+        if (isOptimalTransportationTable(plan, priceTable)) {
+            return new Table(plan);
+        }
+
+
+        Table improvedPlan = new Table(plan);
+        Table preparedTable = prepareForThePotentialMethod(plan);
+        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
+        Table potentialTable = calcPotentials(preparedTable, priceTable);
+        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
+        Table deltaTable = calcDeltas(potentialTable, priceTable, preparedTable);
+        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
+
+        int startCycleX = 1;
+        int startCycleY = 1;
+        Long maxValue = 0L;
+
+        // Находим максимальное положительное
+        for (int x = 1; x < deltaTable.getWidth() - 1; ++x) {
+            for (int y = 1; y < deltaTable.getHeight() - 1; ++y) {
+                if (!deltaTable.get(x, y).equals("X")) {
+                    if (Long.parseLong(deltaTable.get(x, y)) > maxValue) {
+                        startCycleX = x;
+                        startCycleY = y;
+                        maxValue = Long.parseLong(deltaTable.get(x, y));
+                    }
+                }
+            }
+        }
+
+        int finishCycleX = 0;
+        int finishCycleY = 0;
+        // Находим цикл
+        System.out.println("???" + startCycleX + " " + startCycleY);
+        for (int x = 1; x < improvedPlan.getWidth() - 1; ++x) {
+            for (int y = 1; y < improvedPlan.getHeight() - 1; ++y) {
+                if ((x != startCycleX) && (y != startCycleY)
+                        && (!improvedPlan.get(startCycleX, y).equals("0"))
+                        && (!improvedPlan.get(x, startCycleY).equals("0"))) {
+                    finishCycleX = x;
+                    finishCycleY = y;
+                }
+            }
+        }
+        System.out.println("&&& " + finishCycleX + " " + finishCycleY);
+
+        Long minimumNegative = Math.min(
+                Long.parseLong(improvedPlan.get(startCycleX, finishCycleY)),
+                Long.parseLong(improvedPlan.get(finishCycleX, startCycleY))
+        );
+
+        // Меняем значения в цикле
+        improvedPlan.set(startCycleX, finishCycleY,
+                String.valueOf(Long.parseLong(improvedPlan.get(startCycleX, finishCycleY)) - minimumNegative));
+        improvedPlan.set(finishCycleX, startCycleY,
+                String.valueOf(Long.parseLong(improvedPlan.get(finishCycleX, startCycleY)) - minimumNegative));
+
+        if (improvedPlan.get(startCycleX, startCycleY).equals("X")) {
+            improvedPlan.set(startCycleX, startCycleY, "0");
+        }
+        improvedPlan.set(startCycleX, startCycleY,
+                String.valueOf(Long.parseLong(improvedPlan.get(startCycleX, startCycleY)) + minimumNegative));
+        improvedPlan.set(finishCycleX, finishCycleY,
+                String.valueOf(Long.parseLong(improvedPlan.get(finishCycleX, finishCycleY)) + minimumNegative));
+
+        return improvedPlan;
+    }
+
+    private Long calcPrice(Table transportationTable, Table priceTable) {
+        Long answer = 0L;
+
+        for (int x = 1; x < transportationTable.getWidth() - 1; ++x) {
+            for (int y = 1; y < transportationTable.getHeight() - 1; ++y) {
+                answer += Long.parseLong(transportationTable.get(x, y)) * Long.parseLong(priceTable.get(x, y));
+            }
+        }
+
+        return answer;
     }
 
     public Long minimalCost(ArrayList<ArrayList<String>> table) {
