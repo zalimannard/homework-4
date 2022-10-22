@@ -7,14 +7,11 @@ public class MathMethods {
         Table northwestCornerTable = calcBasicPlanUsingNorthwestCorner(table);
         System.out.println("\nТаблица после метода северозападного угла:\n" + northwestCornerTable);
 
-        Table preparedTable = prepareForThePotentialMethod(northwestCornerTable);
-        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
-
-        Table potentialTable = calcPotentials(preparedTable, table);
-        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
-
-        Table deltaTable = calcDeltas(potentialTable, table, preparedTable);
-        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
+        if (isOptimalTransportationTable(northwestCornerTable, table)) {
+            System.out.println("\nТаблица оптимална\n");
+        } else {
+            System.out.println("\nТаблица не оптимальна\n");
+        }
 
         return 0;
     }
@@ -186,6 +183,28 @@ public class MathMethods {
         }
 
         return table;
+    }
+
+    private boolean isOptimalTransportationTable(Table targetTable, Table priceTable) {
+        Table preparedTable = prepareForThePotentialMethod(targetTable);
+        System.out.println("\nТаблица, подготовленная к методу потенциалов:\n" + preparedTable);
+
+        Table potentialTable = calcPotentials(preparedTable, priceTable);
+        System.out.println("\nТаблица с потенциалами:\n" + potentialTable);
+
+        Table deltaTable = calcDeltas(potentialTable, priceTable, preparedTable);
+        System.out.println("\nТаблица с дельтами:\n" + deltaTable);
+
+        for (int x = 1; x < deltaTable.getWidth() - 1; ++x) {
+            for (int y = 1; y < deltaTable.getHeight() - 1; ++y) {
+                if (!deltaTable.get(x, y).equals("X")) {
+                    if (Long.parseLong(deltaTable.get(x, y)) > 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public Long minimalCost(ArrayList<ArrayList<String>> table) {
