@@ -330,6 +330,94 @@ public class MathMethods {
         return answer;
     }
 
+    public long calcSumThroughPotentialAndMinimalCostMethods(Table table) {
+        Table minimalCostTable = calcBasicPlanUsingMinimalCost(table);
+        System.out.println("\nТаблица после метода минимальных стоимостей:\n" + minimalCostTable + "\n\n\n\n\n");
+
+        ArrayList<Table> solutions = new ArrayList<>();
+        solutions.add(new Table(minimalCostTable));
+        for (int i = 0; i < solutions.size(); ++i) {
+            System.out.println("Размер: " + solutions.size());
+            if (isOptimalTransportationTable(solutions.get(i), table)) {
+                System.out.println("\nЛучшее решение:\n" + solutions.get(i));
+                return calcPrice(solutions.get(i), table);
+            }
+
+            ArrayList<Table> preparedTables = prepareForThePotentialMethod(solutions.get(i));
+            for (int j = 0; j < preparedTables.size(); ++j) {
+                Table improvedTable = improveThePlan(solutions.get(i), table, preparedTables.get(j));
+                if (!solutions.contains(improvedTable)) {
+                    solutions.add(improvedTable);
+                }
+            }
+        }
+
+        System.out.println("Не получается найти решения");
+
+        return 0;
+    }
+
+    private Table calcBasicPlanUsingMinimalCost(Table targetTable) {
+        Table table = new Table(targetTable);
+        Table answer = new Table(targetTable);
+        answer.fill(1, 1, answer.getWidth(), answer.getHeight(), "0");
+
+        Long product = 0L;
+        Long request = 0L;
+        for (int i = 1; i < table.getHeight() - 1; ++i) {
+            product += Long.parseLong(table.get(table.getWidth() - 1, i));
+        }
+        System.out.println("\nОбщее количество товара: " + product);
+        for (int i = 1; i < table.getWidth() - 1; ++i) {
+            request += Long.parseLong(table.get(i, table.getHeight() - 1));
+        }
+        System.out.println("\nОбщее требуемое количество: " + request);
+
+        if (!product.equals(request)) {
+            throw new IllegalArgumentException("Несбалансированная таблица");
+        }
+
+        while (request > 0) {
+            int minCostX = 1;
+            int minCostY = 1;
+            Long minCost = Long.MAX_VALUE;
+            for (int x = 1; x < table.getWidth() - 1; ++x) {
+                for (int y = 1; y < table.getHeight() - 1; ++y) {
+                    if (Long.parseLong(table.get(x, y)) < minCost) {
+                        minCost = Long.parseLong(table.get(x, y));
+                        minCostX = x;
+                        minCostY = y;
+                    }
+                }
+            }
+
+            Long transported = Math.min(
+                    Long.parseLong(table.get(minCostX, table.getHeight() - 1)),
+                    Long.parseLong(table.get(table.getWidth() - 1, minCostY))
+            );
+            request -= transported;
+
+            answer.set(minCostX, minCostY, String.valueOf(transported));
+            answer.set(minCostX, answer.getHeight() - 1,
+                    String.valueOf(transported + Long.parseLong(answer.get(minCostX, answer.getHeight() - 1))));
+            answer.set(answer.getWidth() - 1, minCostY,
+                    String.valueOf(transported + Long.parseLong(answer.get(answer.getWidth() - 1, minCostY))));
+            answer.set(answer.getWidth() - 1, answer.getHeight() - 1, String.valueOf(
+                    transported + Long.parseLong(answer.get(answer.getWidth() - 1, answer.getHeight() - 1))));
+
+            table.set(minCostX, minCostY, String.valueOf(Long.MAX_VALUE));
+            table.set(minCostX, table.getHeight() - 1,
+                    String.valueOf(Long.parseLong(table.get(minCostX, table.getHeight() - 1)) - transported));
+            table.set(table.getWidth() - 1, minCostY,
+                    String.valueOf(Long.parseLong(table.get(table.getWidth() - 1, minCostY)) - transported));
+
+        System.out.println("\nТа таблица в методе минимальных стоимостей:\n" + table);
+            System.out.println("\nОчередная таблица в методе минимальных стоимостей:\n" + answer);
+        }
+
+        return answer;
+    }
+
     public Long minimalCost(ArrayList<ArrayList<String>> table) {
         Long product = 0L;
         Long request = 0L;

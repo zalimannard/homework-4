@@ -25,10 +25,10 @@ public class Main {
         System.out.println("Считанные данные:\n" + table);
 
         MathMethods mathMethods = new MathMethods();
-        System.out.println("Методом северо-западного угла: "
-                + mathMethods.calcSumThroughPotentialAndNorthwestCornerMethods(table) + " руб");
+//        System.out.println("Методом северо-западного угла: "
+//                + mathMethods.calcSumThroughPotentialAndNorthwestCornerMethods(table) + " руб");
 
-//        table = readTable();
-//        System.out.println("Методом минимальных стоимостей: " + mathMethods.minimalCost(table) + " руб");
+        System.out.println("Методом минимальных стоимостей: "
+                + mathMethods.calcSumThroughPotentialAndMinimalCostMethods(table) + " руб");
     }
 }
