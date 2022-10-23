@@ -1,8 +1,8 @@
 <div class="myWrapper" align="center" markdown="1">
 
-# :books: Homework 4th year
+# :books: Домашка за 4 курс
 
-*Programs for homework in the 4th year*
+*Программы для домашних заданий на 4 курсе*
 
 [![Open issues](https://img.shields.io/github/issues/zalimannard/homework-4)](https://github.com/zalimannard/homework-4/issues)
 [![Stars](https://img.shields.io/github/stars/zalimannard/homework-4)](https://github.com/zalimannard/homework-4)
@@ -10,36 +10,26 @@
 
 </div>
 
-For each subject there will be a separate folder containing folders with tasks. When new tasks are issued, new folders and clickable links will appear
+Для каждого предмета будут отдельные папки с заданиями. Когда я буду делать задания, здесь будут появляться новые ссылки и папки. Если тут чего-то нет, то, скорее всего, я это не сделал
 
-> "The main thing is order in the head. But we're growing up, aren't we? Having mastered the old old, you can take up the new old (for now and if it is unsafe)"
+> "Главное - порядок в голове. Но мы взрослеем - не так ли? Освоив старое старое, можно приниматься за новое старое (пока и если это небезопасно)"
 
-### Modeling of information systems
+---
 
+#### Моделирование информационных систем
 
+#### Моделирование операций
 
-### Simulation of operations
+- [Лабораторная 2](simulation-of-operations/lab-2) - Решение транспортной задачи на Java
 
+#### Вопросы безопасности программного обеспечения
 
+#### Проектирование баз данных
 
-### Software security issues
+#### Функциональное и логическое программирование
 
+#### Системы искуственного интеллекта
 
+#### Технологии программирования CUDA
 
-### Database design
-
-
-
-### Functional and logical programming
-
-
-
-### Artificial intelligence systems
-
-
-
-### CUDA Programming Technologies
-
-
-
-### Technological practice
+#### Технологическая практика
