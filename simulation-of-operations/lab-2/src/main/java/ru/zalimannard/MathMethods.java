@@ -279,8 +279,112 @@ public class MathMethods {
                 }
             }
 
+
+            // ЗАХАРДКОЖЕНЫЕ НЕКОТОРЫЕ ЦИКЛЫ ДЛЯ ТАБЛИЦ 3X3
+            if (((startCycleX == 1) && (startCycleY == 1))
+                    || ((startCycleX == 1) && (startCycleY == 2))
+                    || ((startCycleX == 2) && (startCycleY == 1))
+                    || ((startCycleX == 2) && (startCycleY == 3))
+                    || ((startCycleX == 3) && (startCycleY == 2))
+                    || ((startCycleX == 3) && (startCycleY == 3))) {
+                int zeroCounter = 0;
+                if (improvedPlan.get(1, 1).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(1, 2).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(2, 1).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(2, 3).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(3, 2).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(3, 3).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (zeroCounter == 1) {
+                    if (((startCycleX == 1) && (startCycleY == 1))
+                            || ((startCycleX == 2) && (startCycleY == 3))
+                            || ((startCycleX == 3) && (startCycleY == 2))) {
+                        Long min = Math.min(Long.parseLong(improvedPlan.get(2, 1)), Long.parseLong(improvedPlan.get(1, 2)));
+                        min = Math.min(min, Long.parseLong(improvedPlan.get(3, 3)));
+                        improvedPlan.set(1, 1, String.valueOf(Long.parseLong(improvedPlan.get(1, 1)) + min));
+                        improvedPlan.set(2, 3, String.valueOf(Long.parseLong(improvedPlan.get(2, 3)) + min));
+                        improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) + min));
+                        improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) - min));
+                        improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) - min));
+                        improvedPlan.set(3, 3, String.valueOf(Long.parseLong(improvedPlan.get(3, 3)) - min));
+                    } else {
+                        Long min = Math.min(Long.parseLong(improvedPlan.get(1, 1)), Long.parseLong(improvedPlan.get(3, 2)));
+                        min = Math.min(min, Long.parseLong(improvedPlan.get(2, 3)));
+                        improvedPlan.set(1, 1, String.valueOf(Long.parseLong(improvedPlan.get(1, 1)) - min));
+                        improvedPlan.set(2, 3, String.valueOf(Long.parseLong(improvedPlan.get(2, 3)) - min));
+                        improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) - min));
+                        improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) + min));
+                        improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) + min));
+                        improvedPlan.set(3, 3, String.valueOf(Long.parseLong(improvedPlan.get(3, 3)) + min));
+                    }
+                }
+            }
+            // ЗАХАРДКОЖЕНЫЕ НЕКОТОРЫЕ ЦИКЛЫ ДЛЯ ТАБЛИЦ 3X3
+            if (((startCycleX == 3) && (startCycleY == 1))
+                    || ((startCycleX == 1) && (startCycleY == 2))
+                    || ((startCycleX == 2) && (startCycleY == 1))
+                    || ((startCycleX == 2) && (startCycleY == 3))
+                    || ((startCycleX == 3) && (startCycleY == 2))
+                    || ((startCycleX == 1) && (startCycleY == 3))) {
+                int zeroCounter = 0;
+                if (improvedPlan.get(3, 1).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(1, 2).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(2, 1).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(2, 3).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(3, 2).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (improvedPlan.get(1, 3).equals("0")) {
+                    ++zeroCounter;
+                }
+                if (zeroCounter == 1) {
+                    if (((startCycleX == 3) && (startCycleY == 1))
+                            || ((startCycleX == 2) && (startCycleY == 3))
+                            || ((startCycleX == 1) && (startCycleY == 2))) {
+                        Long min = Math.min(Long.parseLong(improvedPlan.get(1, 3)), Long.parseLong(improvedPlan.get(2, 1)));
+                        min = Math.min(min, Long.parseLong(improvedPlan.get(3, 2)));
+                        improvedPlan.set(3, 1, String.valueOf(Long.parseLong(improvedPlan.get(3, 1)) + min));
+                        improvedPlan.set(2, 3, String.valueOf(Long.parseLong(improvedPlan.get(2, 3)) + min));
+                        improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) + min));
+                        improvedPlan.set(1, 3, String.valueOf(Long.parseLong(improvedPlan.get(1, 3)) - min));
+                        improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) - min));
+                        improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) - min));
+                    } else {
+                        Long min = Math.min(Long.parseLong(improvedPlan.get(3, 1)), Long.parseLong(improvedPlan.get(2, 3)));
+                        min = Math.min(min, Long.parseLong(improvedPlan.get(1, 2)));
+                        improvedPlan.set(3, 1, String.valueOf(Long.parseLong(improvedPlan.get(3, 1)) - min));
+                        improvedPlan.set(2, 3, String.valueOf(Long.parseLong(improvedPlan.get(2, 3)) - min));
+                        improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) - min));
+                        improvedPlan.set(1, 3, String.valueOf(Long.parseLong(improvedPlan.get(1, 3)) + min));
+                        improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) + min));
+                        improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) + min));
+                    }
+                }
+            }
+            // КОНЕЦ ЗАХАРДКОЖЕНЫХ КРЕСТОВЫХ ЦИКЛОВ
+
             int finishCycleX = 0;
             int finishCycleY = 0;
+            // ТОЛЬКО ПРЯМОУГОЛЬНЫЙ ЦИКЛ НАЧАЛО. НАХОДИТСЯ ТОЛЬКО ОДИН И, ВЕРОЯТНО, КОРЯВО.
             // Находим цикл
             for (int x = 1; x < improvedPlan.getWidth() - 1; ++x) {
                 for (int y = 1; y < improvedPlan.getHeight() - 1; ++y) {
@@ -292,7 +396,6 @@ public class MathMethods {
                     }
                 }
             }
-
             Long minimumNegative = Math.min(
                     Long.parseLong(improvedPlan.get(startCycleX, finishCycleY)),
                     Long.parseLong(improvedPlan.get(finishCycleX, startCycleY))
@@ -311,6 +414,7 @@ public class MathMethods {
                     String.valueOf(Long.parseLong(improvedPlan.get(startCycleX, startCycleY)) + minimumNegative));
             improvedPlan.set(finishCycleX, finishCycleY,
                     String.valueOf(Long.parseLong(improvedPlan.get(finishCycleX, finishCycleY)) + minimumNegative));
+            // ТОЛЬКО ПРЯМОУГОЛЬНЫЙ ЦИКЛ КОНЕЦ
             return improvedPlan;
         } catch (Exception e) {
             // Если в процессе оптимизации совершилась ошибка, то, наверное, его нельзя нормально улучшить
@@ -337,7 +441,6 @@ public class MathMethods {
         ArrayList<Table> solutions = new ArrayList<>();
         solutions.add(new Table(minimalCostTable));
         for (int i = 0; i < solutions.size(); ++i) {
-            System.out.println("Размер: " + solutions.size());
             if (isOptimalTransportationTable(solutions.get(i), table)) {
                 System.out.println("\nЛучшее решение:\n" + solutions.get(i));
                 return calcPrice(solutions.get(i), table);
