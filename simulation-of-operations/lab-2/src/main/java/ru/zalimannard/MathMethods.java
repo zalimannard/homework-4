@@ -318,6 +318,7 @@ public class MathMethods {
                         improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) - min));
                         improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) - min));
                         improvedPlan.set(3, 3, String.valueOf(Long.parseLong(improvedPlan.get(3, 3)) - min));
+                        return improvedPlan;
                     } else {
                         Long min = Math.min(Long.parseLong(improvedPlan.get(1, 1)), Long.parseLong(improvedPlan.get(3, 2)));
                         min = Math.min(min, Long.parseLong(improvedPlan.get(2, 3)));
@@ -327,6 +328,7 @@ public class MathMethods {
                         improvedPlan.set(1, 2, String.valueOf(Long.parseLong(improvedPlan.get(1, 2)) + min));
                         improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) + min));
                         improvedPlan.set(3, 3, String.valueOf(Long.parseLong(improvedPlan.get(3, 3)) + min));
+                        return improvedPlan;
                     }
                 }
             }
@@ -368,6 +370,7 @@ public class MathMethods {
                         improvedPlan.set(1, 3, String.valueOf(Long.parseLong(improvedPlan.get(1, 3)) - min));
                         improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) - min));
                         improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) - min));
+                        return improvedPlan;
                     } else {
                         Long min = Math.min(Long.parseLong(improvedPlan.get(3, 1)), Long.parseLong(improvedPlan.get(2, 3)));
                         min = Math.min(min, Long.parseLong(improvedPlan.get(1, 2)));
@@ -377,6 +380,7 @@ public class MathMethods {
                         improvedPlan.set(1, 3, String.valueOf(Long.parseLong(improvedPlan.get(1, 3)) + min));
                         improvedPlan.set(2, 1, String.valueOf(Long.parseLong(improvedPlan.get(2, 1)) + min));
                         improvedPlan.set(3, 2, String.valueOf(Long.parseLong(improvedPlan.get(3, 2)) + min));
+                        return improvedPlan;
                     }
                 }
             }
