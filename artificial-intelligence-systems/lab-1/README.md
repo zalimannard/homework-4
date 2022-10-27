@@ -19,4 +19,39 @@
 
 ## :computer: Сборка и запуск
 
+### 1. Подготовка
+
+Если текущая Ваша версия Python не 3.6.x или 3.7.x, поставьте одну из них. Посмотреть текущую версию Python можно с помощью команды `python -V` в консоли
+
+1. Поставьте с помощью pip библиотеку pyTelegramBotAPI:
+```shell
+pip install pyTelegramBotAPI
+```
+2. Создайте бота и получите токен через @BotFather
+
+### 2. Загрузка этой программы
+
+```shell
+https://github.com/zalimannard/homework-4.git
+cd artificial-intelligence-systems/lab-1
+```
+
+### 3. Загрузка DeepPavlov
+
+```shell
+# Создать виртуальное окружение
+python -m venv env
+source ./env/bin/activate
+# Обновить pip. Если этого не сделать, то будет ошибка
+pip install --upgrade pip
+# Установить саму DeepPadlov
+pip install deeppavlov
+# Установить зависимости модели
+python -m deeppavlov install squad_bert
+# Указать токен
+echo ВАШ_ТОКЕН > token.txt
+# Запустить программу
+python main.py
+```
+
 ## :movie_camera: Ход работы
