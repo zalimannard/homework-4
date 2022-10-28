@@ -50,6 +50,11 @@ pip install --upgrade pip
 pip install deeppavlov
 # Установить зависимости модели
 python -m deeppavlov install squad_bert
+```
+
+### 4. Запуск программы
+
+```shell
 # Указать токен
 echo ВАШ_ТОКЕН > token.txt
 # Запустить программу
