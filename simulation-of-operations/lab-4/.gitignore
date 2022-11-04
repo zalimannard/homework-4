@@ -1,0 +1,12 @@
+.gradle/
+.idea/
+build/
+gradle/
+
+gradlew
+gradlew.bat
+
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
