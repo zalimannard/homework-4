@@ -5,15 +5,20 @@ import java.util.Arrays;
 
 public abstract class MathMethods {
     public static ArrayList<String> getOptimalWay(Table targetTable) {
-        System.out.println(getOptimalWay(targetTable, 0L));
-        return null;
-    }
-static int counter = 0;
-    private static ArrayList<Node> getOptimalWay(Table targetTable, Long sumOfConstants) {
-        ++counter;
-        if (counter > 15) {
-            return null;
+        ArrayList<Node> answerNodes = getOptimalWay(targetTable, 0L);
+        ArrayList<String> answer = new ArrayList<>(Arrays.asList(targetTable.getDepartures().get(0)));
+        while (answer.size() < targetTable.getDepartures().size()) {
+            for (Node answerNode : answerNodes) {
+                if (answerNode.departure().equals(answer.get(answer.size() - 1))) {
+                    answer.add(answerNode.arrival());
+                }
+            }
         }
+        return answer;
+    }
+
+    private static ArrayList<Node> getOptimalWay(Table targetTable, Long sumOfConstants) {
+
         Table table = new Table(targetTable);
         System.out.println("\nИзначальная таблица:\n" + table);
 
