@@ -93,6 +93,14 @@ public class Table {
         arrivals.remove(name);
     }
 
+    public void removeAllElements() {
+        for (String departure : departures) {
+            for (String arrival : arrivals) {
+                set(departure, arrival, null);
+            }
+        }
+    }
+
     public Long get(String departure, String arrival) {
         return edges.get(new Node(departure, arrival));
     }
