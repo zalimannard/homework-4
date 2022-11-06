@@ -21,6 +21,7 @@
 #### Моделирование операций
 
 - [Лабораторная 2](simulation-of-operations/lab-2) - Решение транспортной задачи на Java
+- [Лабораторная 4](simulation-of-operations/lab-4) - Решение задачи комивояжёра методом ветвей и границ на Java
 
 #### Вопросы безопасности программного обеспечения
 
@@ -30,7 +31,7 @@
 
 #### Системы искуственного интеллекта
 
-- [Задание 1](artificial-intelligence-systems/lab-1) - Context Question Answering для Телеграм-бота
+- [Задание 1](artificial-intelligence-systems/lab-1) - Context Question Answering для Телеграм-бота на Python с библиотекой DeepPavlov
 
 #### Технологии программирования CUDA
 
