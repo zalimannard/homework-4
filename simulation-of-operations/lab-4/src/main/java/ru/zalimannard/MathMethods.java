@@ -22,24 +22,11 @@ public abstract class MathMethods {
     private static Table reduceRows(Table targetTable) {
         Table table = new Table(targetTable);
         for (int y = 1; y < table.getHeight(); ++y) {
-            Long min = Long.MAX_VALUE;
-            // Находим минимум
-            for (int x = 1; x < table.getWidth(); ++x) {
-                if (table.get(x, y) == null) {
-                    continue;
-                }
-                if (table.get(x, y) < min) {
-                    min = table.get(x, y);
-                }
-            }
+            Long min = table.getMinInRow(y);
             table.set(table.getWidth(), y, min);
 
-            // Вычитаем из каждого элемента строки
             for (int x = 1; x < table.getWidth(); ++x) {
-                if (table.get(x, y) == null) {
-                    continue;
-                }
-                table.set(x, y, table.get(x, y) - min);
+                table.dec(x, y, min);
             }
         }
         return table;
@@ -48,24 +35,11 @@ public abstract class MathMethods {
     private static Table reduceColumns(Table targetTable) {
         Table table = new Table(targetTable);
         for (int x = 1; x < table.getWidth(); ++x) {
-            Long min = Long.MAX_VALUE;
-            // Находим минимум
-            for (int y = 1; y < table.getHeight(); ++y) {
-                if (table.get(x, y) == null) {
-                    continue;
-                }
-                if (table.get(x, y) < min) {
-                    min = table.get(x, y);
-                }
-            }
+            Long min = table.getMinInColumn(x);
             table.set(x, table.getHeight(), min);
 
-            // Вычитаем из каждого элемента столбца
             for (int y = 1; y < table.getWidth(); ++y) {
-                if (table.get(x, y) == null) {
-                    continue;
-                }
-                table.set(x, y, table.get(x, y) - min);
+                table.dec(x, y, min);
             }
         }
         return table;
