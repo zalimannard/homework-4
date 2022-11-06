@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class TableReader {
     public Table read(String path) throws CsvValidationException, IOException {
-        Reader reader = null;
+        Reader reader;
         try {
             reader = Files.newBufferedReader(Paths.get(path));
         } catch (IOException e) {
@@ -18,31 +20,30 @@ public class TableReader {
         }
 
         CSVReader csvReader = new CSVReader(reader);
+        ArrayList<ArrayList<String>> tableAsArrayListOfArraysList = new ArrayList<>();
         String[] nextRecord;
-        Table table = null;
-        // Считывание верней строки с заголовками
-        if ((nextRecord = csvReader.readNext()) != null) {
-            if (nextRecord.length > 0) {
-                table = new Table(nextRecord[0]);
-            } else {
-                return new Table("");
-            }
-            for (int i = 1; i < nextRecord.length; ++i) {
-                table.addColumn(nextRecord[i]);
-            }
-        }
-        // Считывание остальной таблицы
         while ((nextRecord = csvReader.readNext()) != null) {
-            table.addRow(nextRecord[0]);
-            for (int i = 1; i < nextRecord.length; ++i) {
-                if (i == table.getWidth() + 1) {
-                    table.addColumn("");
-                }
+            ArrayList<String> elementsAsArrayList = new ArrayList<>();
+            Collections.addAll(elementsAsArrayList, nextRecord);
+            tableAsArrayListOfArraysList.add(elementsAsArrayList);
+        }
+
+        Table table = new Table(tableAsArrayListOfArraysList.get(0).get(0));
+        for (ArrayList<String> line : tableAsArrayListOfArraysList) {
+            for (String element : line) {
                 try {
-                    table.set(i, table.getHeight(), Long.valueOf(nextRecord[i]));
-                } catch (Exception e) {
-                    // Если не число, то в таблицу добавляем null
-                    table.set(i, table.getHeight(), null);
+                    Long value = Long.parseLong(element);
+                    table.set(line.get(0), tableAsArrayListOfArraysList.get(0).get(line.indexOf(element)), value);
+                } catch (NumberFormatException e) {
+                    // Если наткнулись на пустоту, то это элемент таблицы. Заносим и удаляем для создания красивых строк
+                    // и столбцов
+                    if (element.equals("")) {
+                        table.set(line.get(0), tableAsArrayListOfArraysList.get(0).get(line.indexOf(element)), 0L);
+                        table.set(line.get(0), tableAsArrayListOfArraysList.get(0).get(line.indexOf(element)), null);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    // Невозможно определить имя точки, не добавляем ничего
+                    e.printStackTrace();
                 }
             }
         }

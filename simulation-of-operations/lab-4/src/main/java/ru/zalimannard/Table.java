@@ -1,209 +1,135 @@
 package ru.zalimannard;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 
 public class Table {
-    private String leftTopCorner;
-    private ArrayList<String> columnName;
-    private ArrayList<String> rowName;
-    private ArrayList<ArrayList<Long>> content;
+    private final String leftTopCorner;
+    private ArrayList<String> departures = new ArrayList<>();
+    private ArrayList<String> arrivals = new ArrayList<>();
+    private final Map<Node, Long> edges = new HashMap<>();
 
     public Table(String leftTopCorner) {
         this.leftTopCorner = leftTopCorner;
-        columnName = new ArrayList<>();
-        rowName = new ArrayList<>();
-        content = new ArrayList<>();
     }
 
     public Table(Table other) {
         leftTopCorner = other.getLeftTopCorner();
-        columnName = new ArrayList<>();
-        rowName = new ArrayList<>();
-        content = new ArrayList<>();
-        for (int column = 1; column <= other.getWidth(); ++column) {
-            addColumn(other.getColumnName(column));
-        }
-        for (int row = 1; row <= other.getHeight(); ++row) {
-            addRow(other.getRowName(row));
-        }
 
-        for (int column = 1; column <= other.getWidth(); ++column) {
-            for (int row = 1; row <= other.getHeight(); ++row) {
-                set(row, column, other.get(row, column));
+        for (String otherDeparture : other.getDepartures()) {
+            for (String otherArrival : other.getArrivals()) {
+                set(otherDeparture, otherArrival, other.get(otherDeparture, otherArrival));
             }
         }
+        departures.clear();
+        arrivals.clear();
+        departures.addAll(other.getDepartures());
+        arrivals.addAll(other.getArrivals());
     }
 
-    public void fill(int x1, int y1, int x2, int y2, Long value) {
-        if (x1 > x2) {
-            int tmp = x2;
-            x2 = x1;
-            x1 = tmp;
-        }
-        if (y1 > y2) {
-            int tmp = y2;
-            y2 = y1;
-            y1 = tmp;
-        }
-        x1 = Math.max(1, x1);
-        y1 = Math.max(1, y1);
-        x2 = Math.min(getWidth(), x2);
-        y2 = Math.min(getHeight(), y2);
-        for (int x = x1; x < x2; ++x) {
-            for (int y = y1; y < y2; ++y) {
-                set(x, y, value);
-            }
-        }
-    }
-
-    public void addRow(String name) {
-        rowName.add(name);
-        ArrayList<Long> lineToAdd = new ArrayList<>();
-        for (int i = 0; i < getWidth(); ++i) {
-            lineToAdd.add(null);
-        }
-        content.add(lineToAdd);
-    }
-
-    public void addColumn(String name) {
-        columnName.add(name);
-        for (int i = 0; i < getHeight(); ++i) {
-            content.get(i).add(null);
-        }
-    }
-
-    public Long inc(int x, int y, Long value) {
+    public Long inc(String departure, String arrival, Long value) {
         try {
-            set(x, y, get(x, y) + value);
+            set(departure, arrival, get(departure, arrival) + value);
         } catch (Exception e) {
             return null;
         }
-        return get(x, y);
+        return get(departure, arrival);
     }
 
-    public Long dec(int x, int y, Long value) {
-        try {
-            set(x, y, get(x, y) - value);
-        } catch (Exception e) {
-            return null;
-        }
-        return get(x, y);
+    public Long dec(String departure, String arrival, Long value) {
+        return inc(departure, arrival, -value);
     }
 
-    public Long getMinInRow(int rowNumber) {
-        if ((rowNumber < 1) || (rowNumber > getHeight())) {
-            return null;
-        }
+    public Long getMinInDeparture(String departureName) {
         Long min = Long.MAX_VALUE;
-        for (int x = 1; x < getWidth(); ++x) {
-            if (get(x, rowNumber) == null) {
-                continue;
+
+        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+            if (cell.getKey().departure().equals(departureName)) {
+                if (cell.getValue() < min) {
+                    min = cell.getValue();
+                }
             }
-            min = Math.min(min, get(x, rowNumber));
         }
-        return min.equals(Long.MAX_VALUE) ? 0 : min;
+
+        return min.equals(Long.MAX_VALUE) ? null : min;
     }
 
-    public Long getMinInColumn(int columnNumber) {
-        if ((columnNumber < 1) || (columnNumber > getWidth())) {
-            return null;
-        }
+    public Long getMinInArrival(String arrivalName) {
         Long min = Long.MAX_VALUE;
-        for (int y = 1; y < getHeight(); ++y) {
-            if (get(columnNumber, y) == null) {
-                continue;
+
+        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+            if (cell.getKey().arrival().equals(arrivalName)) {
+                if (cell.getValue() < min) {
+                    min = cell.getValue();
+                }
             }
-            min = Math.min(min, get(columnNumber, y));
         }
-        return min.equals(Long.MAX_VALUE) ? 0 : min;
+
+        return min.equals(Long.MAX_VALUE) ? null : min;
     }
 
     public String getLeftTopCorner() {
         return leftTopCorner;
     }
 
-    public int getWidth() {
-        return columnName.size();
+    public ArrayList<String> getDepartures() {
+        return departures;
     }
 
-    public int getHeight() {
-        return rowName.size();
+    public ArrayList<String> getArrivals() {
+        return arrivals;
     }
 
-    public Long get(int x, int y) {
-        return content.get(y - 1).get(x - 1);
+    public Long get(String departure, String arrival) {
+        return edges.get(new Node(departure, arrival));
     }
 
-    public void set(int x, int y, Long value) {
-        content.get(y - 1).set(x - 1, value);
-    }
-
-    public String getColumnName(int number) {
-        return columnName.get(number - 1);
-    }
-
-    public String getRowName(int number) {
-        return rowName.get(number - 1);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Table table = (Table) o;
-        return Objects.equals(leftTopCorner, table.leftTopCorner) && Objects.equals(columnName, table.columnName) && Objects.equals(rowName, table.rowName) && Objects.equals(content, table.content);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(leftTopCorner, columnName, rowName, content);
+    public void set(String departure, String arrival, Long value) {
+        if (value == null) {
+            edges.remove(new Node(departure, arrival));
+        } else {
+            edges.put(new Node(departure, arrival), value);
+            if (!departures.contains(departure)) {
+                departures.add(departure);
+            }
+            if (!arrivals.contains(arrival)) {
+                arrivals.add(arrival);
+            }
+        }
     }
 
     @Override
     public String toString() {
         StringBuilder answer = new StringBuilder();
         int maxItemLength = getMaximumElementLength();
-        String spacesForNullElement = getSpaces(maxItemLength, 0);
-        String horizontalLine = String.join("", Collections.nCopies((maxItemLength + 3) * (getWidth() + 1) + 1, "~"));
+        String spacesForEmptyElement = getSpaces(maxItemLength, 0);
+        String horizontalLine = String.join("",
+                Collections.nCopies((maxItemLength + 3) * (getArrivals().size() + 1) + 1, "~")) + "\n";
 
-        // Верхняя строка
-        answer.append(horizontalLine).append("\n");
-        answer.append("| ");
-        if (getLeftTopCorner() == null) {
-            answer.append(spacesForNullElement);
-        } else {
-            answer.append(getSpaces(maxItemLength, getLeftTopCorner().length())).append(getLeftTopCorner());
-        }
-        answer.append(" |");
-        for (int x = 1; x <= getWidth(); ++x) {
-            answer.append(" ");
-            if (getColumnName(x) == null) {
-                answer.append(spacesForNullElement);
-            } else {
-                answer.append(getSpaces(maxItemLength, getColumnName(x).length())).append(getColumnName(x));
-            }
-            answer.append(" |");
+        answer.append(horizontalLine);
+        answer.append("| " + getSpaces(maxItemLength, getLeftTopCorner().length()) + getLeftTopCorner() + " |");
+        for (String arrival : arrivals) {
+            answer.append(" ").append(getSpaces(maxItemLength, arrival.length()));
+            answer.append(arrival + " |");
         }
         answer.append("\n");
-
-        // Остальная таблица
-        for (int y = 1; y < getHeight() + 1; ++y) {
-            answer.append(horizontalLine).append("\n");
-            answer.append("| ").append(getSpaces(maxItemLength, getRowName(y).length())).append(getRowName(y)).append(" |");
-            for (int x = 1; x < getWidth() + 1; ++x) {
+        for (String departure : departures) {
+            answer.append(horizontalLine);
+            answer.append("| " + getSpaces(maxItemLength, departure.length()) + departure + " |");
+            for (String arrival : arrivals) {
                 answer.append(" ");
-                if (get(x, y) == null) {
-                    answer.append(spacesForNullElement);
+                Long value = edges.get(new Node(departure, arrival));
+                if (value == null) {
+                    answer.append(spacesForEmptyElement);
                 } else {
-                    answer.append(getSpaces(maxItemLength, get(x, y).toString().length())).append(get(x, y));
+                    answer.append(getSpaces(maxItemLength, value.toString().length()));
+                    answer.append(value);
                 }
                 answer.append(" |");
             }
             answer.append("\n");
         }
         answer.append(horizontalLine);
+
 
         return answer.toString();
     }
@@ -213,27 +139,14 @@ public class Table {
     }
 
     private int getMaximumElementLength() {
-        int maxLength = 4;
-        for (int x = 1; x < getWidth(); ++x) {
-            for (int y = 1; y < getHeight(); ++y) {
-                if (get(x, y) != null) {
-                    maxLength = Math.max(maxLength, get(x, y).toString().length());
-                }
-            }
+        int maxLength = getLeftTopCorner() == null ? 0 : getLeftTopCorner().length();
+
+        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+            maxLength = Math.max(maxLength, cell.getKey().departure().length());
+            maxLength = Math.max(maxLength, cell.getKey().arrival().length());
+            maxLength = Math.max(maxLength, cell.getValue().toString().length());
         }
-        for (int column = 1; column <= getWidth(); ++column) {
-            if (getColumnName(column) != null) {
-                maxLength = Math.max(maxLength, getColumnName(column).length());
-            }
-        }
-        for (int row = 1; row <= getHeight(); ++row) {
-            if (getRowName(row) != null) {
-                maxLength = Math.max(maxLength, getRowName(row).length());
-            }
-        }
-        if (leftTopCorner != null) {
-            maxLength = Math.max(maxLength, leftTopCorner.length());
-        }
+
         return maxLength;
     }
 }

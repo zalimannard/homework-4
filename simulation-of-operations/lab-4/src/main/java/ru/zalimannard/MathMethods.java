@@ -7,8 +7,6 @@ public abstract class MathMethods {
         Table table = new Table(targetTable);
         System.out.println("\nИзначальная таблица:\n" + table);
 
-        table.addColumn("min i");
-        table.addRow("min j");
         Table tableRowReduced = reduceRows(table);
         System.out.println("\nПосле приведения строк:\n" + tableRowReduced);
         Table tableColumnReduced = reduceColumns(tableRowReduced);
@@ -21,12 +19,17 @@ public abstract class MathMethods {
 
     private static Table reduceRows(Table targetTable) {
         Table table = new Table(targetTable);
-        for (int y = 1; y < table.getHeight(); ++y) {
-            Long min = table.getMinInRow(y);
-            table.set(table.getWidth(), y, min);
-
-            for (int x = 1; x < table.getWidth(); ++x) {
-                table.dec(x, y, min);
+        for (String departure : table.getDepartures()) {
+            if (departure.startsWith("_")) {
+                continue;
+            }
+            Long min = table.getMinInDeparture(departure);
+            table.set(departure, "_Минимум", min);
+            for (String arrival : table.getArrivals()) {
+                if (arrival.startsWith("_")) {
+                    continue;
+                }
+                table.dec(departure, arrival, min);
             }
         }
         return table;
@@ -34,12 +37,17 @@ public abstract class MathMethods {
 
     private static Table reduceColumns(Table targetTable) {
         Table table = new Table(targetTable);
-        for (int x = 1; x < table.getWidth(); ++x) {
-            Long min = table.getMinInColumn(x);
-            table.set(x, table.getHeight(), min);
-
-            for (int y = 1; y < table.getWidth(); ++y) {
-                table.dec(x, y, min);
+        for (String arrival : table.getArrivals()) {
+            if (arrival.startsWith("_")) {
+                continue;
+            }
+            Long min = table.getMinInArrival(arrival);
+            table.set("_Минимум", arrival, min);
+            for (String departure : table.getDepartures()) {
+                if (departure.startsWith("_")) {
+                    continue;
+                }
+                table.dec(departure, arrival, min);
             }
         }
         return table;
@@ -48,19 +56,25 @@ public abstract class MathMethods {
     private static Table setSumOfMinimumsToRightBottomCorner(Table targetTable) {
         Table table = new Table(targetTable);
         Long sumOfMinimums = 0L;
-        for (int y = 1; y < table.getHeight(); ++y) {
-            if (table.get(table.getWidth(), y) == null) {
+        for (String departure : table.getDepartures()) {
+            if (departure.startsWith("_")) {
                 continue;
             }
-            sumOfMinimums += table.get(table.getWidth(), y);
+            Long value = table.get(departure, "_Минимум");
+            if (value != null) {
+                sumOfMinimums += value;
+            }
         }
-        for (int x = 1; x < table.getWidth(); ++x) {
-            if (table.get(x, table.getHeight()) == null) {
+        for (String arrival : table.getArrivals()) {
+            if (arrival.startsWith("_")) {
                 continue;
             }
-            sumOfMinimums += table.get(x, table.getHeight());
+            Long value = table.get("_Минимум", arrival);
+            if (value != null) {
+                sumOfMinimums += value;
+            }
         }
-        table.set(table.getWidth(), table.getHeight(), sumOfMinimums);
+        table.set("_Минимум", "_Минимум", sumOfMinimums);
         return table;
     }
 }
