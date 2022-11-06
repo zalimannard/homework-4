@@ -48,13 +48,13 @@ public abstract class MathMethods {
     private static Table setSumOfMinimumsToRightBottomCorner(Table targetTable) {
         Table table = new Table(targetTable);
         Long sumOfMinimums = 0L;
-        for (int y = 1; y < table.getHeight() - 1; ++y) {
+        for (int y = 1; y < table.getHeight(); ++y) {
             if (table.get(table.getWidth(), y) == null) {
                 continue;
             }
             sumOfMinimums += table.get(table.getWidth(), y);
         }
-        for (int x = 1; x < table.getWidth() - 1; ++x) {
+        for (int x = 1; x < table.getWidth(); ++x) {
             if (table.get(x, table.getHeight()) == null) {
                 continue;
             }
