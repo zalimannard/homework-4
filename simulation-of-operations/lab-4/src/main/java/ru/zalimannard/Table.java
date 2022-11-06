@@ -74,6 +74,52 @@ public class Table {
         }
     }
 
+    public Long inc(int x, int y, Long value) {
+        try {
+            set(x, y, get(x, y) + value);
+        } catch (Exception e) {
+            return null;
+        }
+        return get(x, y);
+    }
+
+    public Long dec(int x, int y, Long value) {
+        try {
+            set(x, y, get(x, y) - value);
+        } catch (Exception e) {
+            return null;
+        }
+        return get(x, y);
+    }
+
+    public Long getMinInRow(int rowNumber) {
+        if ((rowNumber < 1) || (rowNumber > getHeight())) {
+            return null;
+        }
+        Long min = Long.MAX_VALUE;
+        for (int x = 1; x < getWidth(); ++x) {
+            if (get(x, rowNumber) == null) {
+                continue;
+            }
+            min = Math.min(min, get(x, rowNumber));
+        }
+        return min.equals(Long.MAX_VALUE) ? 0 : min;
+    }
+
+    public Long getMinInColumn(int columnNumber) {
+        if ((columnNumber < 1) || (columnNumber > getWidth())) {
+            return null;
+        }
+        Long min = Long.MAX_VALUE;
+        for (int y = 1; y < getHeight(); ++y) {
+            if (get(columnNumber, y) == null) {
+                continue;
+            }
+            min = Math.min(min, get(columnNumber, y));
+        }
+        return min.equals(Long.MAX_VALUE) ? 0 : min;
+    }
+
     public String getLeftTopCorner() {
         return leftTopCorner;
     }
