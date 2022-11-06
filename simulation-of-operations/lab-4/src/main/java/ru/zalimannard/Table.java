@@ -39,9 +39,23 @@ public class Table {
         return inc(departure, arrival, -value);
     }
 
+    public Long getMaxValue() {
+        Long answer = Long.MIN_VALUE;
+
+        for (String departure : departures) {
+            for (String arrival : arrivals) {
+                if (get(departure, arrival) == null) {
+                    continue;
+                }
+                answer = Math.max(answer, get(departure, arrival));
+            }
+        }
+
+        return answer.equals(Long.MIN_VALUE) ? null : answer;
+    }
+
     public Long getMinInDeparture(String departureName) {
         Long min = Long.MAX_VALUE;
-
         for (Map.Entry<Node, Long> cell : edges.entrySet()) {
             if (cell.getKey().departure().equals(departureName)) {
                 if (cell.getValue() < min) {
@@ -50,7 +64,7 @@ public class Table {
             }
         }
 
-        return min.equals(Long.MAX_VALUE) ? null : min;
+        return min.equals(Long.MAX_VALUE) ? 0 : min;
     }
 
     public Long getMinInArrival(String arrivalName) {
@@ -64,7 +78,7 @@ public class Table {
             }
         }
 
-        return min.equals(Long.MAX_VALUE) ? null : min;
+        return min.equals(Long.MAX_VALUE) ? 0 : min;
     }
 
     public String getLeftTopCorner() {
