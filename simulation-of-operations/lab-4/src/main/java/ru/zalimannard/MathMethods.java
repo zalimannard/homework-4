@@ -13,10 +13,11 @@ public abstract class MathMethods {
         }
         // Преобразуем ответ в вид списка, упорядоченного по порядку прохождения
         ArrayList<String> answer = new ArrayList<>(Collections.singletonList(targetTable.getDepartures().get(0)));
-        while (answer.size() < targetTable.getDepartures().size()) {
+        while (answer.size() < targetTable.getDepartures().size() + 1) {
             for (Node answerNode : answerNodes) {
                 if (answerNode.departure().equals(answer.get(answer.size() - 1))) {
                     answer.add(answerNode.arrival());
+                    break;
                 }
             }
         }
