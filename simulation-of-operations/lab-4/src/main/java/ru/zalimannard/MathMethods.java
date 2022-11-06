@@ -2,11 +2,17 @@ package ru.zalimannard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public abstract class MathMethods {
     public static ArrayList<String> getOptimalWay(Table targetTable) {
+        // Получаем ответ как набор вершин формата {из, в}
         ArrayList<Node> answerNodes = getOptimalWay(targetTable, 0L);
-        ArrayList<String> answer = new ArrayList<>(Arrays.asList(targetTable.getDepartures().get(0)));
+        if (answerNodes == null) {
+            return null;
+        }
+        // Преобразуем ответ в вид списка, упорядоченного по порядку прохождения
+        ArrayList<String> answer = new ArrayList<>(Collections.singletonList(targetTable.getDepartures().get(0)));
         while (answer.size() < targetTable.getDepartures().size()) {
             for (Node answerNode : answerNodes) {
                 if (answerNode.departure().equals(answer.get(answer.size() - 1))) {
@@ -18,18 +24,20 @@ public abstract class MathMethods {
     }
 
     private static ArrayList<Node> getOptimalWay(Table targetTable, Long sumOfConstants) {
-
         Table table = new Table(targetTable);
         System.out.println("\nИзначальная таблица:\n" + table);
 
+        // Таблица после редукции
         Table tableFullReduced = reduction(table);
         Long previousSumOfConstant = sumOfConstants + tableFullReduced.get("_Минимум", "_Минимум");
+        // Убираем столбцы содержащие данные о минимумах строк и столбцов
         Table tableWithoutMinimum = new Table(tableFullReduced);
         tableWithoutMinimum.removeDeparture("_Минимум");
         tableWithoutMinimum.removeArrival("_Минимум");
         Table tableWithBranchingEdges = getBranchEdges(tableWithoutMinimum);
         System.out.println("\nТаблица с рёбрами ветвления\n" + tableWithBranchingEdges);
 
+        // Получаем из таблицы с рёбрами ветвления максимальные элементы. Если таких несколько, то нужно разобрать все
         ArrayList<Node> maxElementNodes = new ArrayList<>();
         Long maxElement = tableWithBranchingEdges.getMaxValue();
         for (String departure : targetTable.getDepartures()) {
@@ -43,13 +51,17 @@ public abstract class MathMethods {
             }
         }
 
+        // Для каждого из максимальных элементов нужно проверить - не оптимальный ли это путь и, если нет, то либо
+        // перейти на другую ветку, либо продолжить оптимизировать вглубь
         for (Node maxElementNode : maxElementNodes) {
-            System.out.println("Изначальная таблица:\n" + tableWithoutMinimum);
+            System.out.println("Таблица до оптимизации:\n" + tableWithoutMinimum);
 
+            // Нам нужно провести редукцию, так как в основной таблице могут появляться новые недопустимые элементы
             Table tableFullReducedWhenExcludeOrInclude = reduction(tableWithoutMinimum);
             tableFullReducedWhenExcludeOrInclude.removeDeparture("_Минимум");
             tableFullReducedWhenExcludeOrInclude.removeArrival("_Минимум");
 
+            // Проверяем случай когда указанный путь НЕ будет использоваться
             Table tableWhenExclude = new Table(tableFullReducedWhenExcludeOrInclude);
 
             tableWhenExclude.set(maxElementNode.departure(), maxElementNode.arrival(), null);
@@ -57,20 +69,25 @@ public abstract class MathMethods {
             Long sumOfConstantsWhenExclude = calcEdge(tableWhenExclude);
             System.out.println("Сумма констант если исключаем ребро: " + sumOfConstantsWhenExclude);
 
+            // Проверяем случай когда указанный путь будет использоваться
             Table tableWhenInclude = new Table(tableFullReducedWhenExcludeOrInclude);
 
             tableWhenInclude.set(maxElementNode.arrival(), maxElementNode.departure(), null);
             tableWhenInclude.removeDeparture(maxElementNode.departure());
             tableWhenInclude.removeArrival(maxElementNode.arrival());
+
+            // Если на этом этапе получили таблицу 1 на 1, то нашли оптимальное решение
             if (tableWhenInclude.getDepartures().size() == 1) {
                 return new ArrayList<>(Arrays.asList(
                         new Node(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
                         new Node(maxElementNode.departure(), maxElementNode.arrival())));
             }
+
             System.out.println("Таблица если включаем ребро:\n" + tableWhenInclude);
             Long sumOfConstantsWhenInclude = calcEdge(tableWhenInclude);
             System.out.println("Сумма констант если включаем ребро: " + sumOfConstantsWhenInclude);
 
+            // Если от того, что мы будем использовать путь мы не проиграем, то продолжаем исследовать в глубину
             if (sumOfConstantsWhenInclude <= sumOfConstantsWhenExclude) {
                 ArrayList<Node> answer = getOptimalWay(tableWhenInclude, previousSumOfConstant + sumOfConstantsWhenInclude);
                 if (answer == null) {
@@ -85,21 +102,27 @@ public abstract class MathMethods {
         return null;
     }
 
+    // Приведение таблицы к виду, когда уменьшать её значения нельзя. По теореме, если вычесть из строки или столбца
+    // одно значение, то ответ не поменяется
     private static Table reduction(Table targetTable) {
         Table table = new Table(targetTable);
 
+        // Вычитаем значения в строках
         Table tableRowReduced = reduceRows(table);
         System.out.println("\nПосле приведения строк:\n" + tableRowReduced);
 
+        // Вычитаем значения в столбцах
         Table tableColumnReduced = reduceColumns(tableRowReduced);
         System.out.println("\nПосле приведения столбцов:\n" + tableColumnReduced);
 
+        // Добавляем значение в правый нижний угол - сумму всех вычтенных элементов
         Table tableFullReduced = setSumOfMinimumsToRightBottomCorner(tableColumnReduced);
         System.out.println("\nТаблица после приведений:\n" + tableFullReduced);
 
         return tableFullReduced;
     }
 
+    // Вычисляем значение для нижнего правого угла - сумму всех вычтенных значений
     private static Long calcEdge(Table targetTable) {
         Table table = new Table(targetTable);
         Table tableRowReduced = reduceRows(table);
@@ -108,6 +131,7 @@ public abstract class MathMethods {
         return tableFullReduced.get("_Минимум", "_Минимум");
     }
 
+    // Вычитаем значения из строк
     private static Table reduceRows(Table targetTable) {
         Table table = new Table(targetTable);
         for (String departure : table.getDepartures()) {
@@ -126,6 +150,7 @@ public abstract class MathMethods {
         return table;
     }
 
+    // Вычитаем значения из столбцов
     private static Table reduceColumns(Table targetTable) {
         Table table = new Table(targetTable);
         for (String arrival : table.getArrivals()) {
@@ -144,9 +169,10 @@ public abstract class MathMethods {
         return table;
     }
 
+    // Устанавливаем сумму вычтенных значений в правый нижний угол
     private static Table setSumOfMinimumsToRightBottomCorner(Table targetTable) {
         Table table = new Table(targetTable);
-        Long sumOfMinimums = 0L;
+        long sumOfMinimums = 0;
         for (String departure : table.getDepartures()) {
             if (departure.startsWith("_")) {
                 continue;
@@ -169,6 +195,7 @@ public abstract class MathMethods {
         return table;
     }
 
+    // Получение таблицы с рёбрами ветвления. Максимальное из значений будем использовать для продвижения в алгоритме.
     private static Table getBranchEdges(Table targetTable) {
         Table table = new Table(targetTable);
         table.removeAllElements();

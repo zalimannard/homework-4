@@ -1,11 +1,15 @@
 package ru.zalimannard;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Table {
     private final String leftTopCorner;
-    private ArrayList<String> departures = new ArrayList<>();
-    private ArrayList<String> arrivals = new ArrayList<>();
+    private final ArrayList<String> departures = new ArrayList<>();
+    private final ArrayList<String> arrivals = new ArrayList<>();
     private final Map<Node, Long> edges = new HashMap<>();
 
     public Table(String leftTopCorner) {
@@ -26,17 +30,17 @@ public class Table {
         arrivals.addAll(other.getArrivals());
     }
 
-    public Long inc(String departure, String arrival, Long value) {
+    public void inc(String departure, String arrival, Long value) {
         try {
             set(departure, arrival, get(departure, arrival) + value);
         } catch (Exception e) {
-            return null;
+            return;
         }
-        return get(departure, arrival);
+        get(departure, arrival);
     }
 
-    public Long dec(String departure, String arrival, Long value) {
-        return inc(departure, arrival, -value);
+    public void dec(String departure, String arrival, Long value) {
+        inc(departure, arrival, -value);
     }
 
     public Long getMaxValue() {
@@ -63,7 +67,6 @@ public class Table {
                 }
             }
         }
-
         return min.equals(Long.MAX_VALUE) ? 0 : min;
     }
 
@@ -141,24 +144,30 @@ public class Table {
         String horizontalLine = String.join("",
                 Collections.nCopies((maxItemLength + 3) * (getArrivals().size() + 1) + 1, "~")) + "\n";
 
-        answer.append(horizontalLine);
-        answer.append("| " + getSpaces(maxItemLength, getLeftTopCorner().length()) + getLeftTopCorner() + " |");
+        answer.append(horizontalLine)
+                .append("| ")
+                .append(getSpaces(maxItemLength, getLeftTopCorner().length()))
+                .append(getLeftTopCorner())
+                .append(" |");
         for (String arrival : arrivals) {
-            answer.append(" ").append(getSpaces(maxItemLength, arrival.length()));
-            answer.append(arrival + " |");
+            answer.append(" ")
+                    .append(getSpaces(maxItemLength, arrival.length()))
+                    .append(arrival)
+                    .append(" |");
         }
         answer.append("\n");
         for (String departure : departures) {
-            answer.append(horizontalLine);
-            answer.append("| " + getSpaces(maxItemLength, departure.length()) + departure + " |");
+            answer.append(horizontalLine).append("| ")
+                    .append(getSpaces(maxItemLength, departure.length()))
+                    .append(departure).append(" |");
             for (String arrival : arrivals) {
                 answer.append(" ");
                 Long value = edges.get(new Node(departure, arrival));
                 if (value == null) {
                     answer.append(spacesForEmptyElement);
                 } else {
-                    answer.append(getSpaces(maxItemLength, value.toString().length()));
-                    answer.append(value);
+                    answer.append(getSpaces(maxItemLength, value.toString().length()))
+                            .append(value);
                 }
                 answer.append(" |");
             }
