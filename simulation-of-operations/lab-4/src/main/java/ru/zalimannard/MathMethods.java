@@ -1,11 +1,87 @@
 package ru.zalimannard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class MathMethods {
     public static ArrayList<String> getOptimalWay(Table targetTable) {
+        System.out.println(getOptimalWay(targetTable, 0L));
+        return null;
+    }
+static int counter = 0;
+    private static ArrayList<Node> getOptimalWay(Table targetTable, Long sumOfConstants) {
+        ++counter;
+        if (counter > 15) {
+            return null;
+        }
         Table table = new Table(targetTable);
         System.out.println("\nИзначальная таблица:\n" + table);
+
+        Table tableFullReduced = reduction(table);
+        Long previousSumOfConstant = sumOfConstants + tableFullReduced.get("_Минимум", "_Минимум");
+        Table tableWithoutMinimum = new Table(tableFullReduced);
+        tableWithoutMinimum.removeDeparture("_Минимум");
+        tableWithoutMinimum.removeArrival("_Минимум");
+        Table tableWithBranchingEdges = getBranchEdges(tableWithoutMinimum);
+        System.out.println("\nТаблица с рёбрами ветвления\n" + tableWithBranchingEdges);
+
+        ArrayList<Node> maxElementNodes = new ArrayList<>();
+        Long maxElement = tableWithBranchingEdges.getMaxValue();
+        for (String departure : targetTable.getDepartures()) {
+            for (String arrival : targetTable.getArrivals()) {
+                Long currentValue = tableWithBranchingEdges.get(departure, arrival);
+                if (currentValue == null) {
+                    continue;
+                } else if (currentValue.equals(maxElement)) {
+                    maxElementNodes.add(new Node(departure, arrival));
+                }
+            }
+        }
+
+        for (Node maxElementNode : maxElementNodes) {
+            System.out.println("Изначальная таблица:\n" + tableWithoutMinimum);
+
+            Table tableFullReducedWhenExcludeOrInclude = reduction(tableWithoutMinimum);
+            tableFullReducedWhenExcludeOrInclude.removeDeparture("_Минимум");
+            tableFullReducedWhenExcludeOrInclude.removeArrival("_Минимум");
+
+            Table tableWhenExclude = new Table(tableFullReducedWhenExcludeOrInclude);
+
+            tableWhenExclude.set(maxElementNode.departure(), maxElementNode.arrival(), null);
+            System.out.println("Таблица если исключаем ребро:\n" + tableWhenExclude);
+            Long sumOfConstantsWhenExclude = calcEdge(tableWhenExclude);
+            System.out.println("Сумма констант если исключаем ребро: " + sumOfConstantsWhenExclude);
+
+            Table tableWhenInclude = new Table(tableFullReducedWhenExcludeOrInclude);
+
+            tableWhenInclude.set(maxElementNode.arrival(), maxElementNode.departure(), null);
+            tableWhenInclude.removeDeparture(maxElementNode.departure());
+            tableWhenInclude.removeArrival(maxElementNode.arrival());
+            if (tableWhenInclude.getDepartures().size() == 1) {
+                return new ArrayList<>(Arrays.asList(
+                        new Node(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
+                        new Node(maxElementNode.departure(), maxElementNode.arrival())));
+            }
+            System.out.println("Таблица если включаем ребро:\n" + tableWhenInclude);
+            Long sumOfConstantsWhenInclude = calcEdge(tableWhenInclude);
+            System.out.println("Сумма констант если включаем ребро: " + sumOfConstantsWhenInclude);
+
+            if (sumOfConstantsWhenInclude <= sumOfConstantsWhenExclude) {
+                ArrayList<Node> answer = getOptimalWay(tableWhenInclude, previousSumOfConstant + sumOfConstantsWhenInclude);
+                if (answer == null) {
+                    tableWithoutMinimum.set(maxElementNode.departure(), maxElementNode.arrival(), null);
+                } else {
+                    answer.add(maxElementNode);
+                    return answer;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private static Table reduction(Table targetTable) {
+        Table table = new Table(targetTable);
 
         Table tableRowReduced = reduceRows(table);
         System.out.println("\nПосле приведения строк:\n" + tableRowReduced);
@@ -16,13 +92,15 @@ public abstract class MathMethods {
         Table tableFullReduced = setSumOfMinimumsToRightBottomCorner(tableColumnReduced);
         System.out.println("\nТаблица после приведений:\n" + tableFullReduced);
 
-        Table tableWithoutMinimum = new Table(tableFullReduced);
-        tableWithoutMinimum.removeDeparture("_Минимум");
-        tableWithoutMinimum.removeArrival("_Минимум");
-        Table tableWithBranchingEdges = getBranchEdges(tableWithoutMinimum);
-        System.out.println("\nТаблица с рёбрами ветвления\n" + tableWithBranchingEdges);
+        return tableFullReduced;
+    }
 
-        return null;
+    private static Long calcEdge(Table targetTable) {
+        Table table = new Table(targetTable);
+        Table tableRowReduced = reduceRows(table);
+        Table tableColumnReduced = reduceColumns(tableRowReduced);
+        Table tableFullReduced = setSumOfMinimumsToRightBottomCorner(tableColumnReduced);
+        return tableFullReduced.get("_Минимум", "_Минимум");
     }
 
     private static Table reduceRows(Table targetTable) {
