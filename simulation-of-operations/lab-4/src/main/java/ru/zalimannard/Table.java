@@ -79,6 +79,20 @@ public class Table {
         return arrivals;
     }
 
+    public void removeDeparture(String name) {
+        for (String arrival : arrivals) {
+            set(name, arrival, null);
+        }
+        departures.remove(name);
+    }
+
+    public void removeArrival(String name) {
+        for (String departure : departures) {
+            set(departure, name, null);
+        }
+        arrivals.remove(name);
+    }
+
     public Long get(String departure, String arrival) {
         return edges.get(new Node(departure, arrival));
     }
