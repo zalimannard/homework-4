@@ -13,6 +13,10 @@ public abstract class MathMethods {
         System.out.println("\nПосле приведения столбцов:\n" + tableColumnReduced);
         Table tableFullReduced = setSumOfMinimumsToRightBottomCorner(tableColumnReduced);
         System.out.println("\nТаблица после приведений:\n" + tableFullReduced);
+        Table tableWithoutMinimum = new Table(tableFullReduced);
+        tableWithoutMinimum.removeDeparture("_Минимум");
+        tableWithoutMinimum.removeArrival("_Минимум");
+        System.out.println("\nУДАЛЕНИЕ:\n" + tableWithoutMinimum);
 
         return null;
     }
