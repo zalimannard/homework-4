@@ -31,16 +31,19 @@ public class TableReader {
                 table.addColumn(nextRecord[i]);
             }
         }
-        System.out.println(table);
         // Считывание остальной таблицы
         while ((nextRecord = csvReader.readNext()) != null) {
             table.addRow(nextRecord[0]);
             for (int i = 1; i < nextRecord.length; ++i) {
-                if (i == table.getWidth()) {
+                if (i == table.getWidth() + 1) {
                     table.addColumn("");
                 }
-                System.out.println(table.getHeight());
-                table.set(i, table.getHeight(), Long.valueOf(nextRecord[i]));
+                try {
+                    table.set(i, table.getHeight(), Long.valueOf(nextRecord[i]));
+                } catch (Exception e) {
+                    // Если не число, то в таблицу добавляем null
+                    table.set(i, table.getHeight(), null);
+                }
             }
         }
         return table;

@@ -127,8 +127,9 @@ public class Table {
         } else {
             answer.append(getSpaces(maxItemLength, getLeftTopCorner().length())).append(getLeftTopCorner());
         }
-        answer.append(" | ");
+        answer.append(" |");
         for (int x = 1; x <= getWidth(); ++x) {
+            answer.append(" ");
             if (getColumnName(x) == null) {
                 answer.append(spacesForNullElement);
             } else {
@@ -141,12 +142,13 @@ public class Table {
         // Остальная таблица
         for (int y = 1; y < getHeight() + 1; ++y) {
             answer.append(horizontalLine).append("\n");
-            answer.append("| ").append(getSpaces(maxItemLength, getRowName(y).length())).append(getRowName(y)).append(" | ");
+            answer.append("| ").append(getSpaces(maxItemLength, getRowName(y).length())).append(getRowName(y)).append(" |");
             for (int x = 1; x < getWidth() + 1; ++x) {
+                answer.append(" ");
                 if (get(x, y) == null) {
                     answer.append(spacesForNullElement);
                 } else {
-                    answer.append(getSpaces(maxItemLength, get(x, y).toString().length()));
+                    answer.append(getSpaces(maxItemLength, get(x, y).toString().length())).append(get(x, y));
                 }
                 answer.append(" |");
             }
