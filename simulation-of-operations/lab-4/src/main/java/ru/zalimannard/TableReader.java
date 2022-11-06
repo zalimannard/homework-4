@@ -27,7 +27,6 @@ public class TableReader {
             Collections.addAll(elementsAsArrayList, nextRecord);
             tableAsArrayListOfArraysList.add(elementsAsArrayList);
         }
-
         Table table = new Table(tableAsArrayListOfArraysList.get(0).get(0));
         for (ArrayList<String> line : tableAsArrayListOfArraysList) {
             for (String element : line) {
