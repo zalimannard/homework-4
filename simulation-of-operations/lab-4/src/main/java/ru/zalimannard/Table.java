@@ -19,6 +19,9 @@ public class Table {
 
     public Table(Table other) {
         leftTopCorner = other.getLeftTopCorner();
+        columnName = new ArrayList<>();
+        rowName = new ArrayList<>();
+        content = new ArrayList<>();
         for (int column = 1; column <= other.getWidth(); ++column) {
             addColumn(other.getColumnName(column));
         }

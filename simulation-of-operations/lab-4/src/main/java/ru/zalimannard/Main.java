@@ -15,6 +15,6 @@ public class Main {
         } catch (IOException e) {
             System.err.println("Не удалось считать файл");
         }
-        System.out.println(table);
+        System.out.println(MathMethods.getOptimalWay(table));
     }
 }
