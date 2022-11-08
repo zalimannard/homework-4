@@ -79,9 +79,12 @@ public abstract class MathMethods {
 
             // Если на этом этапе получили таблицу 1 на 1, то нашли оптимальное решение
             if (tableWhenInclude.getDepartures().size() == 1) {
-                return new ArrayList<>(Arrays.asList(
-                        new Node(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
-                        new Node(maxElementNode.departure(), maxElementNode.arrival())));
+                Long lastValue = tableWhenInclude.get(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0));
+                if (lastValue != null) {
+                    return new ArrayList<>(Arrays.asList(
+                            new Node(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
+                            new Node(maxElementNode.departure(), maxElementNode.arrival())));
+                }
             }
 
             System.out.println("Таблица если включаем ребро:\n" + tableWhenInclude);

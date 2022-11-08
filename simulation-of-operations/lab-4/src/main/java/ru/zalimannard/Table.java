@@ -180,7 +180,8 @@ public class Table {
     }
 
     private String getSpaces(int maxItemLength, int elementLength) {
-        return String.join("", Collections.nCopies(maxItemLength - elementLength, " "));
+        int copies = Math.max(0, maxItemLength - elementLength);
+        return String.join("", Collections.nCopies(copies, " "));
     }
 
     private int getMaximumElementLength() {
