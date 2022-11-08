@@ -72,7 +72,11 @@ public abstract class MathMethods {
 
             // Проверяем случай когда указанный путь будет использоваться
             Table tableWhenInclude = new Table(tableFullReducedWhenExcludeOrInclude);
-
+            if (tableWhenInclude.getDepartures().size() == 2) {
+                if (tableWhenInclude.get(maxElementNode.departure(), maxElementNode.arrival()) == null) {
+                    continue;
+                }
+            }
             tableWhenInclude.set(maxElementNode.arrival(), maxElementNode.departure(), null);
             tableWhenInclude.removeDeparture(maxElementNode.departure());
             tableWhenInclude.removeArrival(maxElementNode.arrival());
@@ -96,7 +100,7 @@ public abstract class MathMethods {
                 ArrayList<Node> answer = getOptimalWay(tableWhenInclude, previousSumOfConstant + sumOfConstantsWhenInclude);
                 if (answer == null) {
                     tableWithoutMinimum.set(maxElementNode.departure(), maxElementNode.arrival(), null);
-                } else {
+                } else if (!haveCycle(answer)) {
                     answer.add(maxElementNode);
                     return answer;
                 }
@@ -104,6 +108,30 @@ public abstract class MathMethods {
         }
 
         return null;
+    }
+
+    private static boolean haveCycle(ArrayList<Node> nodes) {
+        if (nodes.size() == 0) {
+            return false;
+        }
+        ArrayList<Node> testNodes = new ArrayList<>();
+        testNodes.add(nodes.get(0));
+        int counter = nodes.size();
+        while (testNodes.size() + 1 != nodes.size()) {
+            if (testNodes.get(0).departure().equals(testNodes.get(testNodes.size() - 1).arrival())) {
+                return true;
+            }
+            for (Node node : nodes) {
+                if (node.departure().equals(testNodes.get(testNodes.size() - 1).arrival())) {
+                    testNodes.add(node);
+                }
+            }
+            --counter;
+            if (counter == 0) {
+                return false;
+            }
+        }
+        return false;
     }
 
     // Приведение таблицы к виду, когда уменьшать её значения нельзя. По теореме, если вычесть из строки или столбца
