@@ -10,7 +10,7 @@ public class Table {
     private final String leftTopCorner;
     private final ArrayList<String> departures = new ArrayList<>();
     private final ArrayList<String> arrivals = new ArrayList<>();
-    private final Map<Node, Long> edges = new HashMap<>();
+    private final Map<Road, Long> edges = new HashMap<>();
 
     public Table(String leftTopCorner) {
         this.leftTopCorner = leftTopCorner;
@@ -60,7 +60,7 @@ public class Table {
 
     public Long getMinInDeparture(String departureName) {
         Long min = Long.MAX_VALUE;
-        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+        for (Map.Entry<Road, Long> cell : edges.entrySet()) {
             if (cell.getKey().departure().equals(departureName)) {
                 if (cell.getValue() < min) {
                     min = cell.getValue();
@@ -73,7 +73,7 @@ public class Table {
     public Long getMinInArrival(String arrivalName) {
         Long min = Long.MAX_VALUE;
 
-        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+        for (Map.Entry<Road, Long> cell : edges.entrySet()) {
             if (cell.getKey().arrival().equals(arrivalName)) {
                 if (cell.getValue() < min) {
                     min = cell.getValue();
@@ -119,14 +119,14 @@ public class Table {
     }
 
     public Long get(String departure, String arrival) {
-        return edges.get(new Node(departure, arrival));
+        return edges.get(new Road(departure, arrival));
     }
 
     public void set(String departure, String arrival, Long value) {
         if (value == null) {
-            edges.remove(new Node(departure, arrival));
+            edges.remove(new Road(departure, arrival));
         } else {
-            edges.put(new Node(departure, arrival), value);
+            edges.put(new Road(departure, arrival), value);
             if (!departures.contains(departure)) {
                 departures.add(departure);
             }
@@ -162,7 +162,7 @@ public class Table {
                     .append(departure).append(" |");
             for (String arrival : arrivals) {
                 answer.append(" ");
-                Long value = edges.get(new Node(departure, arrival));
+                Long value = edges.get(new Road(departure, arrival));
                 if (value == null) {
                     answer.append(spacesForEmptyElement);
                 } else {
@@ -187,7 +187,7 @@ public class Table {
     private int getMaximumElementLength() {
         int maxLength = getLeftTopCorner() == null ? 0 : getLeftTopCorner().length();
 
-        for (Map.Entry<Node, Long> cell : edges.entrySet()) {
+        for (Map.Entry<Road, Long> cell : edges.entrySet()) {
             maxLength = Math.max(maxLength, cell.getKey().departure().length());
             maxLength = Math.max(maxLength, cell.getKey().arrival().length());
             maxLength = Math.max(maxLength, cell.getValue().toString().length());

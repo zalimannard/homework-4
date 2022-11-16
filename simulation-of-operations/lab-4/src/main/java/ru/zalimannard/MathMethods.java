@@ -7,16 +7,16 @@ import java.util.Collections;
 public abstract class MathMethods {
     public static ArrayList<String> getOptimalWay(Table targetTable) {
         // Получаем ответ как набор вершин формата {из, в}
-        ArrayList<Node> answerNodes = getOptimalWay(targetTable, 0L);
-        if (answerNodes == null) {
+        ArrayList<Road> answerRoads = getOptimalWay(targetTable, 0L);
+        if (answerRoads == null) {
             return null;
         }
         // Преобразуем ответ в вид списка, упорядоченного по порядку прохождения
         ArrayList<String> answer = new ArrayList<>(Collections.singletonList(targetTable.getDepartures().get(0)));
         while (answer.size() < targetTable.getDepartures().size() + 1) {
-            for (Node answerNode : answerNodes) {
-                if (answerNode.departure().equals(answer.get(answer.size() - 1))) {
-                    answer.add(answerNode.arrival());
+            for (Road answerRoad : answerRoads) {
+                if (answerRoad.departure().equals(answer.get(answer.size() - 1))) {
+                    answer.add(answerRoad.arrival());
                     break;
                 }
             }
@@ -24,7 +24,7 @@ public abstract class MathMethods {
         return answer;
     }
 
-    private static ArrayList<Node> getOptimalWay(Table targetTable, Long sumOfConstants) {
+    private static ArrayList<Road> getOptimalWay(Table targetTable, Long sumOfConstants) {
         Table table = new Table(targetTable);
         System.out.println("\nИзначальная таблица:\n" + table);
 
@@ -39,7 +39,7 @@ public abstract class MathMethods {
         System.out.println("\nТаблица с рёбрами ветвления\n" + tableWithBranchingEdges);
 
         // Получаем из таблицы с рёбрами ветвления максимальные элементы. Если таких несколько, то нужно разобрать все
-        ArrayList<Node> maxElementNodes = new ArrayList<>();
+        ArrayList<Road> maxElementRoads = new ArrayList<>();
         Long maxElement = tableWithBranchingEdges.getMaxValue();
         for (String departure : targetTable.getDepartures()) {
             for (String arrival : targetTable.getArrivals()) {
@@ -47,14 +47,14 @@ public abstract class MathMethods {
                 if (currentValue == null) {
                     continue;
                 } else if (currentValue.equals(maxElement)) {
-                    maxElementNodes.add(new Node(departure, arrival));
+                    maxElementRoads.add(new Road(departure, arrival));
                 }
             }
         }
 
         // Для каждого из максимальных элементов нужно проверить - не оптимальный ли это путь и, если нет, то либо
         // перейти на другую ветку, либо продолжить оптимизировать вглубь
-        for (Node maxElementNode : maxElementNodes) {
+        for (Road maxElementRoad : maxElementRoads) {
             System.out.println("Таблица до оптимизации:\n" + tableWithoutMinimum);
 
             // Нам нужно провести редукцию, так как в основной таблице могут появляться новые недопустимые элементы
@@ -65,7 +65,7 @@ public abstract class MathMethods {
             // Проверяем случай когда указанный путь НЕ будет использоваться
             Table tableWhenExclude = new Table(tableFullReducedWhenExcludeOrInclude);
 
-            tableWhenExclude.set(maxElementNode.departure(), maxElementNode.arrival(), null);
+            tableWhenExclude.set(maxElementRoad.departure(), maxElementRoad.arrival(), null);
             System.out.println("Таблица если исключаем ребро:\n" + tableWhenExclude);
             Long sumOfConstantsWhenExclude = calcEdge(tableWhenExclude);
             System.out.println("Сумма констант если исключаем ребро: " + sumOfConstantsWhenExclude);
@@ -73,21 +73,21 @@ public abstract class MathMethods {
             // Проверяем случай когда указанный путь будет использоваться
             Table tableWhenInclude = new Table(tableFullReducedWhenExcludeOrInclude);
             if (tableWhenInclude.getDepartures().size() == 2) {
-                if (tableWhenInclude.get(maxElementNode.departure(), maxElementNode.arrival()) == null) {
+                if (tableWhenInclude.get(maxElementRoad.departure(), maxElementRoad.arrival()) == null) {
                     continue;
                 }
             }
-            tableWhenInclude.set(maxElementNode.arrival(), maxElementNode.departure(), null);
-            tableWhenInclude.removeDeparture(maxElementNode.departure());
-            tableWhenInclude.removeArrival(maxElementNode.arrival());
+            tableWhenInclude.set(maxElementRoad.arrival(), maxElementRoad.departure(), null);
+            tableWhenInclude.removeDeparture(maxElementRoad.departure());
+            tableWhenInclude.removeArrival(maxElementRoad.arrival());
 
             // Если на этом этапе получили таблицу 1 на 1, то нашли оптимальное решение
             if (tableWhenInclude.getDepartures().size() == 1) {
                 Long lastValue = tableWhenInclude.get(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0));
                 if (lastValue != null) {
                     return new ArrayList<>(Arrays.asList(
-                            new Node(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
-                            new Node(maxElementNode.departure(), maxElementNode.arrival())));
+                            new Road(tableWhenInclude.getDepartures().get(0), tableWhenInclude.getArrivals().get(0)),
+                            new Road(maxElementRoad.departure(), maxElementRoad.arrival())));
                 }
             }
 
@@ -97,11 +97,11 @@ public abstract class MathMethods {
 
             // Если от того, что мы будем использовать путь мы не проиграем, то продолжаем исследовать в глубину
             if (sumOfConstantsWhenInclude <= sumOfConstantsWhenExclude) {
-                ArrayList<Node> answer = getOptimalWay(tableWhenInclude, previousSumOfConstant + sumOfConstantsWhenInclude);
+                ArrayList<Road> answer = getOptimalWay(tableWhenInclude, previousSumOfConstant + sumOfConstantsWhenInclude);
                 if (answer == null) {
-                    tableWithoutMinimum.set(maxElementNode.departure(), maxElementNode.arrival(), null);
+                    tableWithoutMinimum.set(maxElementRoad.departure(), maxElementRoad.arrival(), null);
                 } else if (!haveCycle(answer)) {
-                    answer.add(maxElementNode);
+                    answer.add(maxElementRoad);
                     return answer;
                 }
             }
@@ -110,20 +110,20 @@ public abstract class MathMethods {
         return null;
     }
 
-    private static boolean haveCycle(ArrayList<Node> nodes) {
-        if (nodes.size() == 0) {
+    private static boolean haveCycle(ArrayList<Road> roads) {
+        if (roads.size() == 0) {
             return false;
         }
-        ArrayList<Node> testNodes = new ArrayList<>();
-        testNodes.add(nodes.get(0));
-        int counter = nodes.size();
-        while (testNodes.size() + 1 != nodes.size()) {
-            if (testNodes.get(0).departure().equals(testNodes.get(testNodes.size() - 1).arrival())) {
+        ArrayList<Road> testRoads = new ArrayList<>();
+        testRoads.add(roads.get(0));
+        int counter = roads.size();
+        while (testRoads.size() + 1 != roads.size()) {
+            if (testRoads.get(0).departure().equals(testRoads.get(testRoads.size() - 1).arrival())) {
                 return true;
             }
-            for (Node node : nodes) {
-                if (node.departure().equals(testNodes.get(testNodes.size() - 1).arrival())) {
-                    testNodes.add(node);
+            for (Road road : roads) {
+                if (road.departure().equals(testRoads.get(testRoads.size() - 1).arrival())) {
+                    testRoads.add(road);
                 }
             }
             --counter;

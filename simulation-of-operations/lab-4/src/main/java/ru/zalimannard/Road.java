@@ -2,13 +2,13 @@ package ru.zalimannard;
 
 import java.util.Objects;
 
-public record Node(String departure, String arrival) {
+public record Road(String departure, String arrival) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Node node = (Node) o;
-        return Objects.equals(departure, node.departure) && Objects.equals(arrival, node.arrival);
+        Road road = (Road) o;
+        return Objects.equals(departure, road.departure) && Objects.equals(arrival, road.arrival);
     }
 
     @Override
