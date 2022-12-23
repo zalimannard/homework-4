@@ -33,6 +33,7 @@
 #### Системы искуственного интеллекта
 
 - [Задание 1](artificial-intelligence-systems/lab-1) - Context Question Answering для Телеграм-бота на Python с библиотекой DeepPavlov
+- [Задание 2](artificial-intelligence-systems/lab-2) - Intent Catcher для Телеграм-бота на Python с библиотекой DeepPavlov
 
 #### Технологии программирования CUDA
 
