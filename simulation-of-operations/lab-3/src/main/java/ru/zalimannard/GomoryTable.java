@@ -107,7 +107,39 @@ public class GomoryTable {
         return answer;
     }
 
-    public double get (String columnName, String rowName) {
+    public void recalc(String mainColumnName, String mainRowName) {
+        // Главную строку и столбец пересчитаем потом, потому что они используются для подсчётов
+        for (GomoryNode node : table.keySet()) {
+            if ((!node.getRowName().equals(mainRowName)) && (!node.getColumnName().equals(mainColumnName))) {
+                double coefficient = table.get(new GomoryNode(mainColumnName, node.getRowName())) /
+                        table.get(new GomoryNode(mainColumnName, mainRowName));
+                double value = table.get(node) - coefficient * table.get(new GomoryNode(node.getColumnName(), mainRowName));
+                // Убираем случаи -0.0
+                if (Math.abs(value) <= 0.000001) {
+                    value = 0.0;
+                }
+                table.put(node, value);
+            }
+        }
+
+        // Главный столбец без главной строки
+        for (GomoryNode node : table.keySet()) {
+            if ((!node.getRowName().equals(mainRowName)) && (node.getColumnName().equals(mainColumnName))) {
+                table.put(node, 0.0);
+            }
+        }
+
+        // Главная строка
+        double coefficient = table.get(new GomoryNode(mainColumnName, mainRowName));
+        for (GomoryNode node : table.keySet()) {
+            if (node.getRowName().equals(mainRowName)) {
+                double value = table.get(node) / coefficient;
+                table.put(node, value);
+            }
+        }
+    }
+
+    public double get(String columnName, String rowName) {
         return table.get(new GomoryNode(columnName, rowName));
     }
 
@@ -138,17 +170,21 @@ public class GomoryTable {
 
         for (String rowName : rowNames) {
             answer += rowName + "\t\t";
-            answer += table.get(new GomoryNode("b", rowName)) + spaces(table.get(new GomoryNode("b", rowName)));
+            answer += compressDouble(table.get(new GomoryNode("b", rowName))) +
+                    spaces(table.get(new GomoryNode("b", rowName)));
             for (String columnName : columnNames) {
-                answer += table.get(new GomoryNode(columnName, rowName)) + spaces(table.get(new GomoryNode(columnName, rowName)));
+                answer += compressDouble(table.get(new GomoryNode(columnName, rowName))) +
+                        spaces(table.get(new GomoryNode(columnName, rowName)));
             }
             answer += "\n";
         }
 
         answer += "F\t\t";
-        answer += table.get(new GomoryNode("b", "F")) + spaces(table.get(new GomoryNode("b", "F")));
+        answer += compressDouble(table.get(new GomoryNode("b", "F"))) +
+                spaces(table.get(new GomoryNode("b", "F")));
         for (String columnName : columnNames) {
-            answer += table.get(new GomoryNode(columnName, "F")) + spaces(table.get(new GomoryNode(columnName, "F")));
+            answer += compressDouble(table.get(new GomoryNode(columnName, "F"))) +
+                    spaces(table.get(new GomoryNode(columnName, "F")));
         }
         answer += "\n";
 
@@ -156,12 +192,12 @@ public class GomoryTable {
     }
 
     private double compressDouble(double value) {
-        int valueInt = (int) (value * 100);
+        int valueInt = (int) Math.round(value * 100);
         return ((double) valueInt) / 100;
     }
 
     private String spaces(double value) {
-        int number = 8 - String.valueOf(value).length();
+        int number = 8 - String.valueOf(compressDouble(value)).length();
         String answer = "";
         for (int i = 0; i < number; ++i) {
             answer += " ";

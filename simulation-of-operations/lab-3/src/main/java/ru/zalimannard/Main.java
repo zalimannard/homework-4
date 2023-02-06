@@ -25,13 +25,24 @@ public class Main {
         System.out.println(gomoryTable);
 
         String minXRowForBColumn = gomoryTable.minB();
-        while (gomoryTable.get("b", minXRowForBColumn) < 0) {
+        int iteration = 0;
+        while (gomoryTable.get("b", minXRowForBColumn) < 0.0) {
             System.out.println("Минимальный элемент среди свободных членов: " + gomoryTable.get("b", minXRowForBColumn));
             System.out.println("Среди свободных членов есть отрицательные. Нужно перейти к допустимому решению");
 
-            String minXForMinBRow = gomoryTable.minInRow(minXRowForBColumn);
+            String minXColumnForMinBRow = gomoryTable.minInRow(minXRowForBColumn);
+            if (gomoryTable.get(minXColumnForMinBRow, minXRowForBColumn) >= 0.0) {
+                System.out.println("Задачу решить нельзя");
+                return;
+            }
             System.out.println("Ведущая строка: " + minXRowForBColumn);
-            System.out.println("Ведущий столбец: " + minXForMinBRow);
+            System.out.println("Ведущий столбец: " + minXColumnForMinBRow);
+            System.out.println();
+
+            ++iteration;
+            System.out.println("Пересчитываем таблицу. Итерация " + iteration);
+            gomoryTable.recalc(minXColumnForMinBRow, minXRowForBColumn);
+            System.out.println(gomoryTable);
             break;
         }
     }
