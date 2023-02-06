@@ -23,5 +23,11 @@ public class Main {
         GomoryTable gomoryTable = new GomoryTable(equationSystem, targetFunction);
         System.out.println("Перевели в симплекс-таблицу:");
         System.out.println(gomoryTable);
+
+        String minXRowForBColumn = gomoryTable.minB();
+        while (gomoryTable.get("b", minXRowForBColumn) < 0) {
+            System.out.println("Среди свободных членов есть отрицательные. Нужно перейти к допустимому решению");
+            break;
+        }
     }
 }

@@ -73,6 +73,27 @@ public class GomoryTable {
         table.put(newNodeB, 0.0);
     }
 
+    public String minB() {
+        Double min = null;
+        String answer = null;
+        for (GomoryNode gomoryNode : table.keySet()) {
+            if ((gomoryNode.getColumnName().equals("b")) && (!gomoryNode.getRowName().equals("F"))) {
+                if (answer == null) {
+                    min = table.get(gomoryNode);
+                    answer = gomoryNode.getRowName();
+                } else if (min > table.get(gomoryNode)) {
+                    min = table.get(gomoryNode);
+                    answer = gomoryNode.getRowName();
+                }
+            }
+        }
+        return answer;
+    }
+
+    public double get (String columnName, String rowName) {
+        return table.get(new GomoryNode(columnName, rowName));
+    }
+
     @Override
     public String toString() {
         Set<String> columnNamesSet = new HashSet<>();
