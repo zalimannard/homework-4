@@ -19,7 +19,8 @@ public class Main {
         System.out.println("Она же, но в уравнениях:");
         System.out.println(equationSystem);
 
-        Equation targetFunction = new Equation(new ArrayList<>(Arrays.asList(+1.0, +3.0)), -1);
+        // -1 - найти минимум, +1 - найти максимум
+        Equation targetFunction = new Equation(new ArrayList<>(Arrays.asList(+1.0, +3.0)), +1);
         GomoryTable gomoryTable = new GomoryTable(equationSystem, targetFunction);
         System.out.println("Перевели в симплекс-таблицу:");
         System.out.println(gomoryTable);
