@@ -21,7 +21,7 @@ public class EquationSystem {
         return equations.get(equationsIndex);
     }
 
-    public int getNumberOfVariables() {
+    public int getNumberOfEquation() {
         return equations.size();
     }
 

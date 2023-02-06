@@ -22,7 +22,7 @@ public class InequalitySystem {
         return inequalities.get(inequalityIndex);
     }
 
-    public int getNumberOfVariables() {
+    public int getNumberOfInequality() {
         return inequalities.size();
     }
 
