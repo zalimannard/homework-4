@@ -43,7 +43,37 @@ public class Main {
             System.out.println("Пересчитываем таблицу. Итерация " + iteration);
             gomoryTable.recalc(minXColumnForMinBRow, minXRowForBColumn);
             System.out.println(gomoryTable);
+
+            // Обновляем минимум в b
+            minXRowForBColumn = gomoryTable.minB();
+        }
+
+        while (!isIntegerSolution(gomoryTable, targetFunction.getNumberOfVariables())) {
+            System.out.println("Нашли оптимальное нецелочисленное решение.");
+
+            String maxFractionalPartRow = gomoryTable.maxFractionalPartRow(targetFunction.getNumberOfVariables());
+            double maxFractionalPart = gomoryTable.fractionalPart(gomoryTable.get("b", maxFractionalPartRow));
+            System.out.println("Максимальная дробная часть у: " + maxFractionalPartRow);
+            System.out.println("И она равна: " + maxFractionalPart);
+            System.out.println();
+            System.out.println("Для " + maxFractionalPartRow + " введём дополнительное ограничение");
             break;
         }
+
+        System.out.println("Нашли оптимальное целочисленное решение.");
+        System.out.println();
+    }
+
+    private static boolean isIntegerSolution(GomoryTable gomoryTable, int numberOfVariables) {
+        for (int i = 1; i <= numberOfVariables; ++i) {
+            if (gomoryTable.exist("b", "x" + i)) {
+                double value = gomoryTable.get("b", "x" + i);
+                int valueInteger = (int) value;
+                if (Math.abs(value - valueInteger) >= 0.0001) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

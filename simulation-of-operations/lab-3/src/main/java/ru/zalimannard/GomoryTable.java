@@ -107,6 +107,31 @@ public class GomoryTable {
         return answer;
     }
 
+    public String maxFractionalPartRow(int numberOfVariables) {
+        Double max = null;
+        String answer = null;
+        for (GomoryNode gomoryNode : table.keySet()) {
+            if ((gomoryNode.getColumnName().equals("b")) && (!gomoryNode.getRowName().equals("F")) &&
+                    (Integer.valueOf(gomoryNode.getRowName().substring(1)) <= numberOfVariables)) {
+
+                if (answer == null) {
+                    max = fractionalPart(table.get(gomoryNode));
+                    answer = gomoryNode.getRowName();
+                } else if ((fractionalPart(max)) > fractionalPart(table.get(gomoryNode))) {
+                    max = fractionalPart(table.get(gomoryNode));
+                    answer = gomoryNode.getRowName();
+                }
+            }
+        }
+        return answer;
+    }
+
+    public double fractionalPart(double value) {
+        return compressDouble(
+                compressDouble(value) -
+                        compressDouble(Math.floor(value)));
+    }
+
     public void recalc(String mainColumnName, String mainRowName) {
         // Главную строку и столбец пересчитаем потом, потому что они используются для подсчётов
         for (GomoryNode node : table.keySet()) {
@@ -137,28 +162,29 @@ public class GomoryTable {
                 table.put(node, value);
             }
         }
+
+        // Меняем заголовок строки
+        table.put(new GomoryNode("b", mainColumnName), table.get(new GomoryNode("b", mainRowName)));
+        table.remove(new GomoryNode("b", mainRowName));
+        List<String> columnNames = getColumnNames();
+        for (String columnName : columnNames) {
+            table.put(new GomoryNode(columnName, mainColumnName), table.get(new GomoryNode(columnName, mainRowName)));
+            table.remove(new GomoryNode(columnName, mainRowName));
+        }
     }
 
     public double get(String columnName, String rowName) {
         return table.get(new GomoryNode(columnName, rowName));
     }
 
+    public boolean exist(String columnName, String rowName) {
+        return table.containsKey(new GomoryNode(columnName, rowName));
+    }
+
     @Override
     public String toString() {
-        Set<String> columnNamesSet = new HashSet<>();
-        Set<String> rowNamesSet = new HashSet<>();
-
-        for (GomoryNode gomoryNode : table.keySet()) {
-            if (!gomoryNode.getColumnName().equals("b")) {
-                columnNamesSet.add(gomoryNode.getColumnName());
-            }
-            if (!gomoryNode.getRowName().equals("F")) {
-                rowNamesSet.add(gomoryNode.getRowName());
-            }
-        }
-
-        List<String> columnNames = new ArrayList<>(columnNamesSet);
-        List<String> rowNames = new ArrayList<>(rowNamesSet);
+        List<String> columnNames = getColumnNames();
+        List<String> rowNames = getRowNames();
 
         String answer = "";
 
@@ -189,6 +215,30 @@ public class GomoryTable {
         answer += "\n";
 
         return answer;
+    }
+
+    public List<String> getRowNames() {
+        Set<String> rowNamesSet = new HashSet<>();
+
+        for (GomoryNode gomoryNode : table.keySet()) {
+            if (!gomoryNode.getRowName().equals("F")) {
+                rowNamesSet.add(gomoryNode.getRowName());
+            }
+        }
+
+        return new ArrayList<>(rowNamesSet);
+    }
+
+    public List<String> getColumnNames() {
+        Set<String> columnNamesSet = new HashSet<>();
+
+        for (GomoryNode gomoryNode : table.keySet()) {
+            if (!gomoryNode.getColumnName().equals("b")) {
+                columnNamesSet.add(gomoryNode.getColumnName());
+            }
+        }
+
+        return new ArrayList<>(columnNamesSet);
     }
 
     private double compressDouble(double value) {
