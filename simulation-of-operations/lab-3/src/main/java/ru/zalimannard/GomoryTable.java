@@ -42,6 +42,9 @@ public class GomoryTable {
         for (int j = 0; j < targetFunction.getNumberOfVariables(); ++j) {
             String columnName = "x" + (j + 1);
             double value = targetFunction.getVariable(j);
+            if (targetFunction.getResult() == 1) {
+                value = -value;
+            }
             // Убираем случаи -0.0
             if (Math.abs(value) <= 0.000001) {
                 value = 0.0;
@@ -117,7 +120,7 @@ public class GomoryTable {
                 if (answer == null) {
                     max = fractionalPart(table.get(gomoryNode));
                     answer = gomoryNode.getRowName();
-                } else if ((fractionalPart(max)) > fractionalPart(table.get(gomoryNode))) {
+                } else if ((fractionalPart(max)) <= fractionalPart(table.get(gomoryNode))) {
                     max = fractionalPart(table.get(gomoryNode));
                     answer = gomoryNode.getRowName();
                 }
@@ -127,9 +130,7 @@ public class GomoryTable {
     }
 
     public double fractionalPart(double value) {
-        return compressDouble(
-                compressDouble(value) -
-                        compressDouble(Math.floor(value)));
+        return value - Math.floor(value);
     }
 
     public void recalc(String mainColumnName, String mainRowName) {
@@ -175,16 +176,16 @@ public class GomoryTable {
 
     public void createNewRestriction(String baseRow) {
         List<String> columnNames = getColumnNames();
-        table.put(new GomoryNode("b", "x"), -fractionalPart(table.get(new GomoryNode("b", baseRow))));
+        table.put(new GomoryNode("b", "x0"), -fractionalPart(table.get(new GomoryNode("b", baseRow))));
         for (String columnName : columnNames) {
-            table.put(new GomoryNode(columnName, "x"), -fractionalPart(table.get(new GomoryNode(columnName, baseRow))));
+            table.put(new GomoryNode(columnName, "x0"), -fractionalPart(table.get(new GomoryNode(columnName, baseRow))));
         }
 
         String newXNumber = "x" + (getColumnNames().size() + 1);
         table.put(new GomoryNode(newXNumber, "F"), 0.0);
         List<String> rowNames = getRowNames();
         for (String rowName : rowNames) {
-            if (!rowName.equals("x")) {
+            if (!rowName.equals("x0")) {
                 table.put(new GomoryNode(newXNumber, rowName), 0.0);
             } else {
                 table.put(new GomoryNode(newXNumber, rowName), 1.0);
@@ -198,6 +199,14 @@ public class GomoryTable {
 
     public boolean exist(String columnName, String rowName) {
         return table.containsKey(new GomoryNode(columnName, rowName));
+    }
+
+    public void checkZero() {
+        for (GomoryNode node : table.keySet()) {
+            if (Math.abs(table.get(node)) <= 0.000001) {
+                table.put(node, 0.0);
+            }
+        }
     }
 
     @Override
@@ -215,20 +224,20 @@ public class GomoryTable {
 
         for (String rowName : rowNames) {
             answer += rowName + "\t\t";
-            answer += compressDouble(table.get(new GomoryNode("b", rowName))) +
+            answer += Utils.compressDouble(table.get(new GomoryNode("b", rowName))) +
                     spaces(table.get(new GomoryNode("b", rowName)));
             for (String columnName : columnNames) {
-                answer += compressDouble(table.get(new GomoryNode(columnName, rowName))) +
+                answer += Utils.compressDouble(table.get(new GomoryNode(columnName, rowName))) +
                         spaces(table.get(new GomoryNode(columnName, rowName)));
             }
             answer += "\n";
         }
 
         answer += "F\t\t";
-        answer += compressDouble(table.get(new GomoryNode("b", "F"))) +
+        answer += Utils.compressDouble(table.get(new GomoryNode("b", "F"))) +
                 spaces(table.get(new GomoryNode("b", "F")));
         for (String columnName : columnNames) {
-            answer += compressDouble(table.get(new GomoryNode(columnName, "F"))) +
+            answer += Utils.compressDouble(table.get(new GomoryNode(columnName, "F"))) +
                     spaces(table.get(new GomoryNode(columnName, "F")));
         }
         answer += "\n";
@@ -260,13 +269,8 @@ public class GomoryTable {
         return new ArrayList<>(columnNamesSet);
     }
 
-    private double compressDouble(double value) {
-        int valueInt = (int) Math.round(value * 100);
-        return ((double) valueInt) / 100;
-    }
-
     private String spaces(double value) {
-        int number = 8 - String.valueOf(compressDouble(value)).length();
+        int number = 8 - String.valueOf(Utils.compressDouble(value)).length();
         String answer = "";
         for (int i = 0; i < number; ++i) {
             answer += " ";

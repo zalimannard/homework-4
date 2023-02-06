@@ -51,6 +51,21 @@ public class Main {
 
         System.out.println("Нашли оптимальное целочисленное решение.");
         System.out.println();
+        System.out.println("Значения переменных:");
+        for (int i = 1; i <= targetFunction.getNumberOfVariables(); ++i) {
+            System.out.print("x" + i + " = ");
+            if (gomoryTable.exist("b", "x" + i)) {
+                System.out.println(Utils.compressDouble(gomoryTable.get("b", "x" + i)));
+            } else {
+                System.out.println(0);
+            }
+        }
+        System.out.print("Итоговый ответ: ");
+        if (targetFunction.getResult() == 1) {
+            System.out.println(Utils.compressDouble(gomoryTable.get("b", "F")));
+        } else {
+            System.out.println(Utils.compressDouble(-gomoryTable.get("b", "F")));
+        }
     }
 
     private static void getOptimal(GomoryTable gomoryTable) {
@@ -64,7 +79,7 @@ public class Main {
             String minXColumnForMinBRow = gomoryTable.minInRow(minXRowForBColumn);
             if (gomoryTable.get(minXColumnForMinBRow, minXRowForBColumn) >= 0.0) {
                 System.out.println("Задачу решить нельзя");
-                return;
+                System.exit(0);
             }
             System.out.println("Ведущая строка: " + minXRowForBColumn);
             System.out.println("Ведущий столбец: " + minXColumnForMinBRow);
@@ -77,6 +92,45 @@ public class Main {
 
             // Обновляем минимум в b
             minXRowForBColumn = gomoryTable.minB();
+        }
+
+        // Удостоверимся, что нет -0.0
+        gomoryTable.checkZero();
+
+        // У целевой функции не должно быть отрицательных элементов
+        iteration = 0;
+        System.out.println(gomoryTable.get(gomoryTable.minInRow("F"), "F"));
+        while (gomoryTable.get(gomoryTable.minInRow("F"), "F") < 0.0) {
+            System.out.println("У целевой функции есть отрицательные элементы. Избавимся. Итерация " + iteration);
+
+            // Разрешающий столбец
+            String columnWithMinF = gomoryTable.minInRow("F");
+            String rowPair = null;
+            Double minDiv = null;
+
+            // Вычисляем разрешающую строку
+            for (String rowName : gomoryTable.getRowNames()) {
+                if (gomoryTable.get(columnWithMinF, rowName) > 0.0) {
+                    if (rowPair == null) {
+                        rowPair = rowName;
+                        minDiv = gomoryTable.get("b", rowName) / gomoryTable.get(columnWithMinF, rowName);
+                    } else {
+                        if (gomoryTable.get("b", rowName) / gomoryTable.get(columnWithMinF, rowName) < minDiv) {
+                            rowPair = rowName;
+                            minDiv = gomoryTable.get("b", rowName) / gomoryTable.get(columnWithMinF, rowName);
+                        }
+                    }
+                }
+            }
+            if (rowPair == null) {
+                System.out.println("Посчитать не получится");
+                System.exit(0);
+            }
+
+            System.out.println("Разрешающий столбец: " + columnWithMinF);
+            System.out.println("Разрешающая строка: " + rowPair);
+
+            gomoryTable.recalc(columnWithMinF, rowPair);
         }
     }
 
