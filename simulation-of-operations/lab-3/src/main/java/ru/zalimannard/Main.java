@@ -26,7 +26,12 @@ public class Main {
 
         String minXRowForBColumn = gomoryTable.minB();
         while (gomoryTable.get("b", minXRowForBColumn) < 0) {
+            System.out.println("Минимальный элемент среди свободных членов: " + gomoryTable.get("b", minXRowForBColumn));
             System.out.println("Среди свободных членов есть отрицательные. Нужно перейти к допустимому решению");
+
+            String minXForMinBRow = gomoryTable.minInRow(minXRowForBColumn);
+            System.out.println("Ведущая строка: " + minXRowForBColumn);
+            System.out.println("Ведущий столбец: " + minXForMinBRow);
             break;
         }
     }

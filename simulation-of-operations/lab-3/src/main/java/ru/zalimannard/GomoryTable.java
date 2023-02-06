@@ -90,6 +90,23 @@ public class GomoryTable {
         return answer;
     }
 
+    public String minInRow(String rowName) {
+        Double min = null;
+        String answer = null;
+        for (GomoryNode gomoryNode : table.keySet()) {
+            if ((gomoryNode.getColumnName().startsWith("x")) && (gomoryNode.getRowName().equals(rowName))) {
+                if (answer == null) {
+                    min = table.get(gomoryNode);
+                    answer = gomoryNode.getColumnName();
+                } else if (min > table.get(gomoryNode)) {
+                    min = table.get(gomoryNode);
+                    answer = gomoryNode.getColumnName();
+                }
+            }
+        }
+        return answer;
+    }
+
     public double get (String columnName, String rowName) {
         return table.get(new GomoryNode(columnName, rowName));
     }
