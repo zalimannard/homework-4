@@ -21,6 +21,7 @@
 #### Моделирование операций
 
 - [Лабораторная 2](simulation-of-operations/lab-2) - Транспортная задача на Java
+- [Лабораторная 3](simulation-of-operations/lab-3) - Метод Гомори на Java
 - [Лабораторная 4](simulation-of-operations/lab-4) - Задача комивояжёра методом ветвей и границ на Java
 - [Лабораторная 5](simulation-of-operations/lab-5) - Задачи о рюкзаке на Java
 
