@@ -173,6 +173,25 @@ public class GomoryTable {
         }
     }
 
+    public void createNewRestriction(String baseRow) {
+        List<String> columnNames = getColumnNames();
+        table.put(new GomoryNode("b", "x"), -fractionalPart(table.get(new GomoryNode("b", baseRow))));
+        for (String columnName : columnNames) {
+            table.put(new GomoryNode(columnName, "x"), -fractionalPart(table.get(new GomoryNode(columnName, baseRow))));
+        }
+
+        String newXNumber = "x" + (getColumnNames().size() + 1);
+        table.put(new GomoryNode(newXNumber, "F"), 0.0);
+        List<String> rowNames = getRowNames();
+        for (String rowName : rowNames) {
+            if (!rowName.equals("x")) {
+                table.put(new GomoryNode(newXNumber, rowName), 0.0);
+            } else {
+                table.put(new GomoryNode(newXNumber, rowName), 1.0);
+            }
+        }
+    }
+
     public double get(String columnName, String rowName) {
         return table.get(new GomoryNode(columnName, rowName));
     }

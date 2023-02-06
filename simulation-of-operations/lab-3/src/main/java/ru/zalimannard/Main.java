@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         InequalitySystem inequalitySystem = new InequalitySystem();
-        inequalitySystem.add(new Inequality(new ArrayList<>(Arrays.asList(-1.0, +5.0)), Operator.GREATER_OR_EQUAL, 6));
+        inequalitySystem.add(new Inequality(new ArrayList<>(Arrays.asList(-1.0, +4.0)), Operator.GREATER_OR_EQUAL, 6));
         inequalitySystem.add(new Inequality(new ArrayList<>(Arrays.asList(+0.0, -3.0)), Operator.LESS_OR_EQUAL, 4));
         inequalitySystem.add(new Inequality(new ArrayList<>(Arrays.asList(+2.0, +1.0)), Operator.LESS_OR_EQUAL, 8));
         inequalitySystem.add(new Inequality(new ArrayList<>(Arrays.asList(+3.0, -3.0)), Operator.GREATER_OR_EQUAL, 0));
@@ -23,6 +23,37 @@ public class Main {
         GomoryTable gomoryTable = new GomoryTable(equationSystem, targetFunction);
         System.out.println("Перевели в симплекс-таблицу:");
         System.out.println(gomoryTable);
+
+        // Добиваемся хоть какого-нибудь оптимального решения
+        getOptimal(gomoryTable);
+
+        // Приводим решение к целочисленному
+        while (!isIntegerSolution(gomoryTable, targetFunction.getNumberOfVariables())) {
+            System.out.println("Нашли оптимальное нецелочисленное решение.");
+
+            String maxFractionalPartRow = gomoryTable.maxFractionalPartRow(targetFunction.getNumberOfVariables());
+            double maxFractionalPart = gomoryTable.fractionalPart(gomoryTable.get("b", maxFractionalPartRow));
+            System.out.println("Максимальная дробная часть у: " + maxFractionalPartRow);
+            System.out.println("И она равна: " + maxFractionalPart);
+            System.out.println();
+            System.out.println("Для " + maxFractionalPartRow + " введём дополнительное ограничение");
+
+            gomoryTable.createNewRestriction(maxFractionalPartRow);
+            System.out.println("Теперь таблица имеет вид:");
+            System.out.println(gomoryTable);
+            System.out.println();
+
+            System.out.println("Сделаем решение допустимым:");
+            getOptimal(gomoryTable);
+            System.out.println(gomoryTable);
+            System.out.println();
+        }
+
+        System.out.println("Нашли оптимальное целочисленное решение.");
+        System.out.println();
+    }
+
+    private static void getOptimal(GomoryTable gomoryTable) {
 
         String minXRowForBColumn = gomoryTable.minB();
         int iteration = 0;
@@ -47,21 +78,6 @@ public class Main {
             // Обновляем минимум в b
             minXRowForBColumn = gomoryTable.minB();
         }
-
-        while (!isIntegerSolution(gomoryTable, targetFunction.getNumberOfVariables())) {
-            System.out.println("Нашли оптимальное нецелочисленное решение.");
-
-            String maxFractionalPartRow = gomoryTable.maxFractionalPartRow(targetFunction.getNumberOfVariables());
-            double maxFractionalPart = gomoryTable.fractionalPart(gomoryTable.get("b", maxFractionalPartRow));
-            System.out.println("Максимальная дробная часть у: " + maxFractionalPartRow);
-            System.out.println("И она равна: " + maxFractionalPart);
-            System.out.println();
-            System.out.println("Для " + maxFractionalPartRow + " введём дополнительное ограничение");
-            break;
-        }
-
-        System.out.println("Нашли оптимальное целочисленное решение.");
-        System.out.println();
     }
 
     private static boolean isIntegerSolution(GomoryTable gomoryTable, int numberOfVariables) {
