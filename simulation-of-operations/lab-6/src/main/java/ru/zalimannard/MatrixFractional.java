@@ -1,5 +1,6 @@
 package ru.zalimannard;
 
+import java.util.Collections;
 import java.util.List;
 
 public class MatrixFractional extends Matrix<Double> {
@@ -182,5 +183,63 @@ public class MatrixFractional extends Matrix<Double> {
         }
 
         return maxCell;
+    }
+
+    @Override
+    public String toString() {
+        String answer = "";
+        int cellLength = Math.max(4, getMaxLength() + 3);
+        String horizontalLine = String.join("", Collections.nCopies((cellLength + 3) * (width() + 1) + 1, "~"));
+        List<String> columnNames = columnNames();
+        List<String> rowNames = rowNames();
+
+        answer += horizontalLine + "\n";
+        answer += "|  " + String.join("", Collections.nCopies(cellLength, " "));
+        for (String columnName : columnNames) {
+            String spaces = String.join("", Collections.nCopies(cellLength - columnName.length(), " "));
+            answer += "| " + spaces + columnName + " ";
+        }
+        answer += "|";
+
+        answer += "\n";
+        for (String rowName : rowNames) {
+            String firstColumnSpace = String.join("", Collections.nCopies(cellLength - rowName.length(), " "));
+            answer += "| " + firstColumnSpace + rowName + " ";
+
+            for (String columnName : columnNames) {
+                Cell cell = new Cell(columnName, rowName);
+                String valueAsString = "";
+                if (get(cell) != null) {
+                    valueAsString = String.valueOf(Utils.compress(get(cell)));
+                }
+                String spaces = String.join("", Collections.nCopies(cellLength - valueAsString.length(), " "));
+                answer += "| " + spaces + valueAsString + " ";
+            }
+            answer += "|\n";
+        }
+        answer += horizontalLine;
+        return answer;
+    }
+
+    private int getMaxLength() {
+        int maxLength = 0;
+        List<String> columnNames = columnNames();
+        List<String> rowNames = rowNames();
+
+        for (String columnName : columnNames) {
+            maxLength = Math.max(maxLength, columnName.length());
+        }
+        for (String rowName : rowNames) {
+            maxLength = Math.max(maxLength, rowName.length());
+        }
+        for (String columnName : columnNames) {
+            for (String rowName : rowNames) {
+                Cell cell = new Cell(columnName, rowName);
+                if (get(cell) != null) {
+                    maxLength = Utils.compress(get(cell)).toString().length();
+                }
+            }
+        }
+        return maxLength;
     }
 }

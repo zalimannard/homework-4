@@ -213,6 +213,7 @@ public class Main {
         // У целевой функции не должно быть отрицательных элементов
         iteration = 0;
         while (table.minInRowValue("Fun", List.of("C")) < 0.0) {
+            ++iteration;
             System.out.println("У целевой функции есть отрицательные элементы. Избавимся. Итерация " + iteration);
 
             // Разрешающий столбец
@@ -244,14 +245,49 @@ public class Main {
             Cell baseCell = new Cell(baseColumnCell.getColumn(), rowPair);
 
             table = recalc(table, baseCell);
+            System.out.println(table);
         }
         return table;
     }
 
     private static MatrixFractional recalc(MatrixFractional targetMatrix, Cell baseCell) {
-        System.out.println("aboba");
-        System.exit(0);
-        return targetMatrix;
+        MatrixFractional table = new MatrixFractional(targetMatrix);
+
+        List<String> columnNames = targetMatrix.columnNames();
+        List<String> rowNames = targetMatrix.rowNames();
+
+        // Главную строку и столбец пересчитаем потом, потому что они используются для подсчётов
+        for (String columnName : columnNames) {
+            for (String rowName : rowNames) {
+                if ((!columnName.equals(baseCell.getColumn())) && (!rowName.equals(baseCell.getRow()))) {
+                    Cell cell = new Cell(columnName, rowName);
+                    double coefficient = targetMatrix.get(new Cell(baseCell.getColumn(), cell.getRow())) /
+                            targetMatrix.get(new Cell(baseCell.getColumn(), baseCell.getRow()));
+                    double value = targetMatrix.get(cell) - coefficient * targetMatrix.get(new Cell(cell.getColumn(), baseCell.getRow()));
+                    checkZero(table);
+                    table.set(cell, value);
+                }
+            }
+        }
+
+        // Главный столбец без главной строки
+        for (String rowName : rowNames) {
+            if (!rowName.equals(baseCell.getRow())) {
+                table.set(new Cell(baseCell.getColumn(), rowName), 0.0);
+            }
+        }
+
+        // Главная строка
+        for (String columnName : columnNames) {
+            double value = targetMatrix.get(new Cell(columnName, baseCell.getRow())) / targetMatrix.get(baseCell);
+            table.set(new Cell(columnName, baseCell.getRow()), value);
+        }
+
+        // Меняем заголовок строки
+        table.changeRowName(baseCell.getRow(), baseCell.getColumn());
+
+        checkZero(table);
+        return table;
     }
 
     // Удостоверимся, что нет -0.0
@@ -279,7 +315,7 @@ public class Main {
         List<String> rowNames = targetMatrix.rowNames();
 
         for (int row = 0; row < rowNames.size(); ++row) {
-            Cell simplexTableCell = new Cell("C", "z" + (row + 1));
+            Cell simplexTableCell = new Cell("C", "z" + (row + targetMatrix.width() + 1));
             table.set(simplexTableCell, 1.0);
         }
         table.set(new Cell("C", "Fun"), 0.0);
@@ -287,7 +323,7 @@ public class Main {
         for (int column = 0; column < columnNames.size(); ++column) {
             for (int row = 0; row < rowNames.size(); ++row) {
                 Cell targetMatrixCell = new Cell(columnNames.get(column), rowNames.get(row));
-                Cell simplexTableCell = new Cell("z" + (column + 1), "z" + (row + 1));
+                Cell simplexTableCell = new Cell("z" + (column + 1), "z" + (row + targetMatrix.width() + 1));
                 table.set(simplexTableCell, targetMatrix.get(targetMatrixCell));
             }
             Cell targetMatrixCellFun = new Cell("z" + (column + 1), "Fun");
@@ -296,7 +332,7 @@ public class Main {
 
         for (int column = columnNames.size(); column < columnNames.size() + rowNames.size(); ++column) {
             for (int row = 0; row < rowNames.size(); ++row) {
-                Cell simplexTableCell = new Cell("z" + (column + 1), "z" + (row + 1));
+                Cell simplexTableCell = new Cell("z" + (column + 1), "z" + (row + targetMatrix.width() + 1));
                 if (row == column - columnNames.size()) {
                     table.set(simplexTableCell, 1.0);
                 } else {
