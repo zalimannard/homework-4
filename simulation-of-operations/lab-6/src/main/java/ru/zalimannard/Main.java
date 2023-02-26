@@ -46,10 +46,10 @@ public class Main {
         }
     }
 
-    private static void copy(Matrix<Double> matrix, Matrix<Double> matrixWithMinAndMax) {
-        for (int x = 1; x <= matrix.getWidth(); ++x) {
-            for (int y = 1; y <= matrix.getHeight(); ++y) {
-                matrixWithMinAndMax.set(x, y, matrix.get(x, y));
+    private static void copy(Matrix<Double> a, Matrix<Double> b) {
+        for (int x = 1; x <= a.getWidth(); ++x) {
+            for (int y = 1; y <= a.getHeight(); ++y) {
+                b.set(x, y, a.get(x, y));
             }
         }
     }
