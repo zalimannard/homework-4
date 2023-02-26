@@ -2,7 +2,16 @@ package ru.zalimannard;
 
 import java.util.List;
 
-public class MatrixFractional extends Matrix<Double>{
+public class MatrixFractional extends Matrix<Double> {
+
+    public MatrixFractional() {
+
+    }
+
+    public MatrixFractional(MatrixFractional matrix) {
+        super(matrix);
+    }
+
     public Double minInRow(String rowName, List<String> excludedColumns) {
         Double min = null;
 
@@ -10,10 +19,12 @@ public class MatrixFractional extends Matrix<Double>{
             if (!excludedColumns.contains(columnName)) {
                 Cell cell = new Cell(columnName, rowName);
                 Double cellValue = get(cell);
-                if (min == null) {
-                    min = cellValue;
-                } else if (cellValue < min) {
-                    min = cellValue;
+                if (cellValue != null) {
+                    if (min == null) {
+                        min = cellValue;
+                    } else if (cellValue < min) {
+                        min = cellValue;
+                    }
                 }
             }
         }
@@ -28,10 +39,12 @@ public class MatrixFractional extends Matrix<Double>{
             if (!excludedColumns.contains(columnName)) {
                 Cell cell = new Cell(columnName, rowName);
                 Double cellValue = get(cell);
-                if (max == null) {
-                    max = cellValue;
-                } else if (cellValue > max) {
-                    max = cellValue;
+                if (cellValue != null) {
+                    if (max == null) {
+                        max = cellValue;
+                    } else if (cellValue > max) {
+                        max = cellValue;
+                    }
                 }
             }
         }
@@ -46,10 +59,12 @@ public class MatrixFractional extends Matrix<Double>{
             if (!excludedRows.contains(rowName)) {
                 Cell cell = new Cell(columnName, rowName);
                 Double cellValue = get(cell);
-                if (min == null) {
-                    min = cellValue;
-                } else if (cellValue < min) {
-                    min = cellValue;
+                if (cellValue != null) {
+                    if (min == null) {
+                        min = cellValue;
+                    } else if (cellValue < min) {
+                        min = cellValue;
+                    }
                 }
             }
         }
@@ -64,10 +79,12 @@ public class MatrixFractional extends Matrix<Double>{
             if (!excludedRows.contains(rowName)) {
                 Cell cell = new Cell(columnName, rowName);
                 Double cellValue = get(cell);
-                if (max == null) {
-                    max = cellValue;
-                } else if (cellValue > max) {
-                    max = cellValue;
+                if (cellValue != null) {
+                    if (max == null) {
+                        max = cellValue;
+                    } else if (cellValue > max) {
+                        max = cellValue;
+                    }
                 }
             }
         }

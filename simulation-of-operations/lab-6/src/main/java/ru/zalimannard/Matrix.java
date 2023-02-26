@@ -17,8 +17,9 @@ public class Matrix<T> {
         for (String columnName : columnNames) {
             for (String rowName : rowNames) {
                 Cell cell = new Cell(columnName, rowName);
-                if (get(cell) != null) {
-                    set(cell, (T) other.get(cell));
+                T cellValue = (T) other.get(cell);
+                if (cellValue != null) {
+                    set(cell, cellValue);
                 }
             }
         }
@@ -45,7 +46,13 @@ public class Matrix<T> {
     }
 
     public void set(Cell cell, T value) {
-        content.put(cell, value);
+        if (value == null) {
+            if (content.containsKey(cell)) {
+              content.remove(cell);
+            }
+        } else {
+            content.put(cell, value);
+        }
     }
 
     public int width() {
@@ -96,12 +103,23 @@ public class Matrix<T> {
     public String toString() {
         String answer = "";
         int cellLength = Math.max(4, getMaxLength());
-        String horizontalLine = String.join("", Collections.nCopies((cellLength + 3) * width() + 1, "~"));
+        String horizontalLine = String.join("", Collections.nCopies((cellLength + 3) * (width() + 1) + 1, "~"));
         List<String> columnNames = columnNames();
         List<String> rowNames = rowNames();
 
         answer += horizontalLine + "\n";
+        answer += "|  " + String.join("", Collections.nCopies(cellLength, " "));
+        for (String columnName : columnNames) {
+            String spaces = String.join("", Collections.nCopies(cellLength - columnName.length(), " "));
+            answer += "| " + spaces + columnName + " ";
+        }
+        answer += "|";
+
+        answer += "\n";
         for (String rowName : rowNames) {
+            String firstColumnSpace = String.join("", Collections.nCopies(cellLength - rowName.length(), " "));
+            answer += "| " + firstColumnSpace + rowName + " ";
+
             for (String columnName : columnNames) {
                 Cell cell = new Cell(columnName, rowName);
                 String valueAsString = "";
