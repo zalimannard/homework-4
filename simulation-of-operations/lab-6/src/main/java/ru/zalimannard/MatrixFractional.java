@@ -12,7 +12,7 @@ public class MatrixFractional extends Matrix<Double> {
         super(matrix);
     }
 
-    public Double minInRow(String rowName, List<String> excludedColumns) {
+    public Double minInRowValue(String rowName, List<String> excludedColumns) {
         Double min = null;
 
         for (String columnName : columnNames()) {
@@ -32,7 +32,7 @@ public class MatrixFractional extends Matrix<Double> {
         return min;
     }
 
-    public Double maxInRow(String rowName, List<String> excludedColumns) {
+    public Double maxInRowValue(String rowName, List<String> excludedColumns) {
         Double max = null;
 
         for (String columnName : columnNames()) {
@@ -52,7 +52,7 @@ public class MatrixFractional extends Matrix<Double> {
         return max;
     }
 
-    public Double minInColumn(String columnName, List<String> excludedRows) {
+    public Double minInColumnValue(String columnName, List<String> excludedRows) {
         Double min = null;
 
         for (String rowName : rowNames()) {
@@ -72,7 +72,7 @@ public class MatrixFractional extends Matrix<Double> {
         return min;
     }
 
-    public Double maxInColumn(String columnName, List<String> excludedRows) {
+    public Double maxInColumnValue(String columnName, List<String> excludedRows) {
         Double max = null;
 
         for (String rowName : rowNames()) {
@@ -90,5 +90,97 @@ public class MatrixFractional extends Matrix<Double> {
         }
 
         return max;
+    }
+
+    public Cell minInRowCell(String rowName, List<String> excludedColumns) {
+        Cell minCell = null;
+        Double min = null;
+
+        for (String columnName : columnNames()) {
+            if (!excludedColumns.contains(columnName)) {
+                Cell cell = new Cell(columnName, rowName);
+                Double cellValue = get(cell);
+                if (cellValue != null) {
+                    if (min == null) {
+                        minCell = cell;
+                        min = cellValue;
+                    } else if (cellValue < min) {
+                        minCell = cell;
+                        min = cellValue;
+                    }
+                }
+            }
+        }
+
+        return minCell;
+    }
+
+    public Cell maxInRowCell(String rowName, List<String> excludedColumns) {
+        Cell maxCell = null;
+        Double max = null;
+
+        for (String columnName : columnNames()) {
+            if (!excludedColumns.contains(columnName)) {
+                Cell cell = new Cell(columnName, rowName);
+                Double cellValue = get(cell);
+                if (cellValue != null) {
+                    if (max == null) {
+                        maxCell = cell;
+                        max = cellValue;
+                    } else if (cellValue > max) {
+                        maxCell = cell;
+                        max = cellValue;
+                    }
+                }
+            }
+        }
+
+        return maxCell;
+    }
+
+    public Cell minInColumnCell(String columnName, List<String> excludedRows) {
+        Cell minCell = null;
+        Double min = null;
+
+        for (String rowName : rowNames()) {
+            if (!excludedRows.contains(rowName)) {
+                Cell cell = new Cell(columnName, rowName);
+                Double cellValue = get(cell);
+                if (cellValue != null) {
+                    if (min == null) {
+                        minCell = cell;
+                        min = cellValue;
+                    } else if (cellValue < min) {
+                        minCell = cell;
+                        min = cellValue;
+                    }
+                }
+            }
+        }
+
+        return minCell;
+    }
+
+    public Cell maxInColumnCell(String columnName, List<String> excludedRows) {
+        Cell maxCell = null;
+        Double max = null;
+
+        for (String rowName : rowNames()) {
+            if (!excludedRows.contains(rowName)) {
+                Cell cell = new Cell(columnName, rowName);
+                Double cellValue = get(cell);
+                if (cellValue != null) {
+                    if (max == null) {
+                        maxCell = cell;
+                        max = cellValue;
+                    } else if (cellValue > max) {
+                        maxCell = cell;
+                        max = cellValue;
+                    }
+                }
+            }
+        }
+
+        return maxCell;
     }
 }

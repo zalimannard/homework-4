@@ -1,7 +1,5 @@
 package ru.zalimannard;
 
-import lombok.NoArgsConstructor;
-
 import java.util.*;
 
 public class Matrix<T> {
@@ -28,7 +26,7 @@ public class Matrix<T> {
     public List<String> columnNames() {
         Set<String> uniqueColumnName = new HashSet<>();
         for (Cell cell : content.keySet()) {
-            uniqueColumnName.add(cell.getX());
+            uniqueColumnName.add(cell.getColumn());
         }
         return uniqueColumnName.stream().toList();
     }
@@ -36,7 +34,7 @@ public class Matrix<T> {
     public List<String> rowNames() {
         Set<String> uniqueRowName = new HashSet<>();
         for (Cell cell : content.keySet()) {
-            uniqueRowName.add(cell.getY());
+            uniqueRowName.add(cell.getRow());
         }
         return uniqueRowName.stream().toList();
     }
@@ -58,7 +56,7 @@ public class Matrix<T> {
     public int width() {
         Set<String> uniqueColumnName = new HashSet<>();
         for (Cell cell : content.keySet()) {
-            uniqueColumnName.add(cell.getX());
+            uniqueColumnName.add(cell.getColumn());
         }
         return uniqueColumnName.size();
     }
@@ -66,7 +64,7 @@ public class Matrix<T> {
     public int height() {
         Set<String> uniqueRowName = new HashSet<>();
         for (Cell cell : content.keySet()) {
-            uniqueRowName.add(cell.getY());
+            uniqueRowName.add(cell.getRow());
         }
         return uniqueRowName.size();
     }
@@ -75,8 +73,8 @@ public class Matrix<T> {
         List<Cell> cellsToRemove = new ArrayList<>();
 
         for (Cell cell : content.keySet()) {
-            if (cell.getY().equals(rowName)) {
-                cellsToRemove.add(new Cell(cell.getX(), cell.getY()));
+            if (cell.getRow().equals(rowName)) {
+                cellsToRemove.add(new Cell(cell.getColumn(), cell.getRow()));
             }
         }
 
@@ -89,14 +87,32 @@ public class Matrix<T> {
         List<Cell> cellsToRemove = new ArrayList<>();
 
         for (Cell cell : content.keySet()) {
-            if (cell.getX().equals(columnName)) {
-                cellsToRemove.add(new Cell(cell.getX(), cell.getY()));
+            if (cell.getColumn().equals(columnName)) {
+                cellsToRemove.add(new Cell(cell.getColumn(), cell.getRow()));
             }
         }
 
         for (Cell cell : cellsToRemove) {
             content.remove(cell);
         }
+    }
+
+    public void changeRowName(String oldName, String newName) {
+        for (String columnName : columnNames()) {
+            Cell oldCell = new Cell(columnName, oldName);
+            Cell newCell = new Cell(columnName, newName);
+            set(newCell, get(oldCell));
+        }
+        removeRow(oldName);
+    }
+
+    public void changeColumnName(String oldName, String newName) {
+        for (String rowName : rowNames()) {
+            Cell oldCell = new Cell(oldName, rowName);
+            Cell newCell = new Cell(newName, rowName);
+            set(newCell, get(oldCell));
+        }
+        removeColumn(oldName);
     }
 
     @Override

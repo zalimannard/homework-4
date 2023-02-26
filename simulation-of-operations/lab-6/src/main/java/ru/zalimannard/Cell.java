@@ -3,20 +3,20 @@ package ru.zalimannard;
 import java.util.Objects;
 
 public class Cell {
-    private String x;
-    private String y;
+    private String column;
+    private String row;
 
-    public Cell(String x, String y) {
-        this.x = x;
-        this.y = y;
+    public Cell(String column, String row) {
+        this.column = column;
+        this.row = row;
     }
 
-    public String getX() {
-        return x;
+    public String getColumn() {
+        return column;
     }
 
-    public String getY() {
-        return y;
+    public String getRow() {
+        return row;
     }
 
     @Override
@@ -24,19 +24,19 @@ public class Cell {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cell cell = (Cell) o;
-        return Objects.equals(getX(), cell.getX()) && Objects.equals(getY(), cell.getY());
+        return Objects.equals(getColumn(), cell.getColumn()) && Objects.equals(getRow(), cell.getRow());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getX(), getY());
+        return Objects.hash(getColumn(), getRow());
     }
 
     @Override
     public String toString() {
         return "Cell{" +
-                "x='" + x + '\'' +
-                ", y='" + y + '\'' +
+                "x='" + column + '\'' +
+                ", y='" + row + '\'' +
                 '}';
     }
 }

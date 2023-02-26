@@ -61,19 +61,19 @@ public class Main {
 
         for (String columnName : targetMatrix.columnNames()) {
             Cell cell = new Cell(columnName, "y" + (targetMatrix.height() + 1));
-            matrix.set(cell, targetMatrix.maxInColumn(columnName, new ArrayList<>()));
+            matrix.set(cell, targetMatrix.maxInColumnValue(columnName, new ArrayList<>()));
         }
         for (String rowName : targetMatrix.rowNames()) {
             Cell cell = new Cell("x" + (targetMatrix.width() + 1), rowName);
-            matrix.set(cell, targetMatrix.minInRow(rowName, new ArrayList<>()));
+            matrix.set(cell, targetMatrix.minInRowValue(rowName, new ArrayList<>()));
         }
 
         System.out.println("Таблица с минимумами:");
         System.out.println(matrix);
 
-        Double maxInLastColumn = matrix.maxInColumn("x" + matrix.width(), new ArrayList<>());
+        Double maxInLastColumn = matrix.maxInColumnValue("x" + matrix.width(), new ArrayList<>());
         System.out.println("Нижняя цена игры (максимум из нового столбца): " + maxInLastColumn);
-        Double minInLastRow = matrix.minInRow("y" + matrix.height(), new ArrayList<>());
+        Double minInLastRow = matrix.minInRowValue("y" + matrix.height(), new ArrayList<>());
         System.out.println("Верхняя цена игры (минимум из новой строки): " + minInLastRow);
 
         if (maxInLastColumn.equals(minInLastRow)) {
@@ -81,7 +81,7 @@ public class Main {
                 for (String rowName : targetMatrix.rowNames()) {
                     Cell cell = new Cell(columnName, rowName);
                     if (matrix.get(cell).equals(maxInLastColumn)) {
-                        System.out.println("Её координаты (" + cell.getX() + "; " + cell.getY() + ") и значение в ней " + maxInLastColumn);
+                        System.out.println("Её координаты (" + cell.getColumn() + "; " + cell.getRow() + ") и значение в ней " + maxInLastColumn);
                         return;
                     }
                 }
@@ -100,19 +100,19 @@ public class Main {
 
         for (String columnName : targetMatrix.columnNames()) {
             Cell cell = new Cell(columnName, "y" + (targetMatrix.height() + 1));
-            matrix.set(cell, targetMatrix.maxInColumn(columnName, new ArrayList<>()));
+            matrix.set(cell, targetMatrix.maxInColumnValue(columnName, new ArrayList<>()));
         }
         for (String rowName : targetMatrix.rowNames()) {
             Cell cell = new Cell("x" + (targetMatrix.width() + 1), rowName);
-            matrix.set(cell, targetMatrix.minInRow(rowName, new ArrayList<>()));
+            matrix.set(cell, targetMatrix.minInRowValue(rowName, new ArrayList<>()));
         }
 
         System.out.println("Таблица с минимумами:");
         System.out.println(matrix);
 
-        Double maxInLastColumn = matrix.maxInColumn("x" + matrix.width(), new ArrayList<>());
+        Double maxInLastColumn = matrix.maxInColumnValue("x" + matrix.width(), new ArrayList<>());
         System.out.println("Нижняя цена игры (максимум из нового столбца): " + maxInLastColumn);
-        Double minInLastRow = matrix.minInRow("y" + matrix.height(), new ArrayList<>());
+        Double minInLastRow = matrix.minInRowValue("y" + matrix.height(), new ArrayList<>());
         System.out.println("Верхняя цена игры (минимум из новой строки): " + minInLastRow);
 
         if (maxInLastColumn.equals(minInLastRow)) {
@@ -188,7 +188,88 @@ public class Main {
         System.out.println("Изначальная симплекс-таблица:");
         System.out.println(table);
 
+        int iteration = 0;
+        while (table.minInColumnValue("C", List.of("Fun")) < 0.0) {
+            Cell minInCCell = table.minInColumnCell("C", List.of("Fun"));
+            System.out.println("Минимальный элемент среди свободных членов: " + table.get(minInCCell));
+            System.out.println("Среди свободных членов есть отрицательные. Нужно перейти к допустимому решению");
+
+            Cell minCellInRowWithMinC = table.minInRowCell(minInCCell.getRow(), List.of("C"));
+            if (table.get(minCellInRowWithMinC) >= 0.0) {
+                System.out.println("Задачу решить нельзя");
+                System.exit(0);
+            }
+            System.out.println("Ведущая строка: " + minCellInRowWithMinC.getRow());
+            System.out.println("Ведущий столбец: " + minCellInRowWithMinC.getColumn());
+            System.out.println();
+
+            ++iteration;
+            System.out.println("Пересчитываем таблицу. Итерация " + iteration);
+            table = recalc(table, minCellInRowWithMinC);
+            table = checkZero(table);
+            System.out.println(table);
+        }
+
+        // У целевой функции не должно быть отрицательных элементов
+        iteration = 0;
+        while (table.minInRowValue("Fun", List.of("C")) < 0.0) {
+            System.out.println("У целевой функции есть отрицательные элементы. Избавимся. Итерация " + iteration);
+
+            // Разрешающий столбец
+            Cell baseColumnCell = table.minInRowCell("Fun", List.of("C"));
+            String rowPair = null;
+            Double minDiv = null;
+
+            // Вычисляем разрешающую строку
+            for (String rowName : table.rowNames()) {
+                if (table.get(new Cell(baseColumnCell.getColumn(), rowName)) > 0.0) {
+                    if (rowPair == null) {
+                        rowPair = rowName;
+                        minDiv = table.get(new Cell("C", rowName)) / table.get(new Cell(baseColumnCell.getColumn(), rowName));
+                    } else {
+                        if (table.get(new Cell("C", rowName)) / table.get(new Cell(baseColumnCell.getColumn(), rowName)) < minDiv) {
+                            rowPair = rowName;
+                            minDiv = table.get(new Cell("C", rowName)) / table.get(new Cell(baseColumnCell.getColumn(), rowName));
+                        }
+                    }
+                }
+            }
+            if (rowPair == null) {
+                System.out.println("Посчитать не получится");
+                System.exit(0);
+            }
+
+            System.out.println("Разрешающий столбец: " + baseColumnCell.getColumn());
+            System.out.println("Разрешающая строка: " + rowPair);
+            Cell baseCell = new Cell(baseColumnCell.getColumn(), rowPair);
+
+            table = recalc(table, baseCell);
+        }
         return table;
+    }
+
+    private static MatrixFractional recalc(MatrixFractional targetMatrix, Cell baseCell) {
+        System.out.println("aboba");
+        System.exit(0);
+        return targetMatrix;
+    }
+
+    // Удостоверимся, что нет -0.0
+    private static MatrixFractional checkZero(MatrixFractional targetMatrix) {
+        MatrixFractional matrix = new MatrixFractional(targetMatrix);
+        List<String> columnNames = matrix.columnNames();
+        List<String> rowNames = matrix.rowNames();
+
+        for (String columnName : columnNames) {
+            for (String rowName : rowNames) {
+                Cell cell = new Cell(columnName, rowName);
+                if (Math.abs(matrix.get(cell)) <= 0.000001) {
+                    matrix.set(cell, 0.0);
+                }
+            }
+        }
+
+        return matrix;
     }
 
     private static MatrixFractional genSimplexTable(MatrixFractional targetMatrix) {
