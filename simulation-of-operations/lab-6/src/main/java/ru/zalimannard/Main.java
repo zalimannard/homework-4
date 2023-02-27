@@ -1,7 +1,9 @@
 package ru.zalimannard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
@@ -44,12 +46,10 @@ public class Main {
         matrix2.set(new Cell("x3", "y3"), +9.0);
         matrix2.set(new Cell("x4", "y3"), +3.0);
 
-        MatrixFractional matrix3 = task2(matrix2);
+        task2(matrix2);
         System.out.println("\n\n\n");
 
-
-
-//        task3(matrix3);
+        task3(matrix2);
     }
 
     private static void task1(MatrixFractional targetMatrix) {
@@ -173,8 +173,8 @@ public class Main {
         double gameCost = 1 / sumList(xList);
         System.out.println("Цена игры: " + gameCost);
 
-        System.out.println("Оптимальная смешанная стратегия 1 игрока: " + multiplyList(xList, gameCost));
-        System.out.println("Оптимальная смешанная стратегия 2 игрока: " + multiplyList(yList, gameCost));
+        System.out.println("Оптимальная смешанная стратегия 1 игрока: " + multiplyList(yList, gameCost));
+        System.out.println("Оптимальная смешанная стратегия 2 игрока: " + multiplyList(xList, gameCost));
 
         return matrix;
     }
@@ -395,5 +395,98 @@ public class Main {
         System.out.println("Задание 3:");
         System.out.println("Изначальная матрица:");
         System.out.println(matrix);
+
+        MatrixFractional braunMatrix = new MatrixFractional();
+        List<String> forCalcX = new ArrayList<>();
+        List<String> forCalcY = new ArrayList<>();
+
+        forCalcX.add("i");
+        forCalcY.add("i");
+        forCalcX.add("j");
+        forCalcY.add("j");
+        forCalcX.add("Vmin");
+        forCalcY.add("Vmin");
+        forCalcX.add("Vmax");
+        forCalcY.add("Vmax");
+        forCalcX.add("V*");
+        forCalcY.add("V*");
+
+        // Первую итерацию вручную
+        braunMatrix.set(new Cell("i", "1"), 1.0);
+        for (String columnName : matrix.columnNames()) {
+            braunMatrix.set(new Cell(columnName, "1"), matrix.get(new Cell(columnName, "y1")));
+            forCalcY.add(columnName);
+        }
+        int firstJValue = Integer.parseInt(dumpFirstLetter(braunMatrix.minInRowCell("1", forCalcX).getColumn()));
+        braunMatrix.set(new Cell("j", "1"), (double) firstJValue);
+        for (String rowName : matrix.rowNames()) {
+            braunMatrix.set(new Cell(rowName, "1"), matrix.get(new Cell("x" + firstJValue, rowName)));
+            forCalcX.add(rowName);
+        }
+        braunMatrix.set(new Cell("Vmin", "1"), braunMatrix.minInRowValue("1", forCalcX));
+        braunMatrix.set(new Cell("Vmax", "1"), braunMatrix.maxInRowValue("1", forCalcY));
+        braunMatrix.set(new Cell("V*", "1"), (braunMatrix.minInRowValue("1", forCalcX) + braunMatrix.maxInRowValue("1", forCalcY)) / 2);
+
+
+        // Все остальные итерации
+        for (int i = 2; i < 3000; ++i) {
+            Cell maxYInPreviousIteration = braunMatrix.maxInRowCell(String.valueOf(i - 1), forCalcY);
+            int currentMatrixRowNumber = Integer.parseInt(dumpFirstLetter(maxYInPreviousIteration.getColumn()));
+            braunMatrix.set(new Cell("i", String.valueOf(i)), (double) currentMatrixRowNumber);
+
+            for (String columnName : matrix.columnNames()) {
+                braunMatrix.set(new Cell(columnName, String.valueOf(i)),
+                        braunMatrix.get(new Cell(columnName, String.valueOf(i - 1))) +
+                                matrix.get(new Cell(columnName, "y" + currentMatrixRowNumber)));
+            }
+
+            int currentMatrixColumnNumber = Integer.parseInt(dumpFirstLetter(
+                    braunMatrix.minInRowCell(String.valueOf(i), forCalcX).getColumn()));
+            braunMatrix.set(new Cell("j", String.valueOf(i)), (double) currentMatrixColumnNumber);
+
+            for (String rowName : matrix.rowNames()) {
+                braunMatrix.set(new Cell(rowName, String.valueOf(i)),
+                        braunMatrix.get(new Cell(rowName, String.valueOf(i - 1))) +
+                                matrix.get(new Cell("x" + currentMatrixColumnNumber, rowName)));
+            }
+
+            braunMatrix.set(new Cell("Vmin", String.valueOf(i)), braunMatrix.minInRowValue(String.valueOf(i), forCalcX) / i);
+            braunMatrix.set(new Cell("Vmax", String.valueOf(i)), braunMatrix.maxInRowValue(String.valueOf(i), forCalcY) / i);
+            braunMatrix.set(new Cell("V*", String.valueOf(i)), (braunMatrix.minInRowValue(String.valueOf(i), forCalcX) / i + braunMatrix.maxInRowValue(String.valueOf(i), forCalcY) / i) / 2);
+
+        }
+
+        System.out.println(braunMatrix);
+
+        Map<Double, Integer> xArr = new HashMap<>();
+        Map<Double, Integer> yArr = new HashMap<>();
+
+        for (String rowNames : braunMatrix.rowNames()) {
+            double xKey = braunMatrix.get(new Cell("i", rowNames));
+            if (xArr.containsKey(xKey)) {
+                xArr.put(xKey, xArr.get(xKey) + 1);
+            } else {
+                xArr.put(xKey, 1);
+            }
+
+            double yKey = braunMatrix.get(new Cell("j", rowNames));
+            if (yArr.containsKey(yKey)) {
+                yArr.put(yKey, yArr.get(yKey) + 1);
+            } else {
+                yArr.put(yKey, 1);
+            }
+        }
+
+        for (Double key : xArr.keySet()) {
+            System.out.println("A" + String.valueOf(key).charAt(0) + ": " + ((double) xArr.get(key) / braunMatrix.height()));
+        }
+        System.out.println();
+        for (Double key : yArr.keySet()) {
+            System.out.println("B" + String.valueOf(key).charAt(0) + ": " + ((double) yArr.get(key) / braunMatrix.height()));
+        }
+    }
+
+    private static String dumpFirstLetter(String s) {
+        return s.substring(1);
     }
 }

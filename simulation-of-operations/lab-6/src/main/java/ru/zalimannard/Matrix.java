@@ -23,20 +23,20 @@ public class Matrix<T> {
         }
     }
 
-    public List<String> columnNames() {
+    public ArrayList<String> columnNames() {
         Set<String> uniqueColumnName = new HashSet<>();
         for (Cell cell : content.keySet()) {
             uniqueColumnName.add(cell.getColumn());
         }
-        return uniqueColumnName.stream().toList();
+        return new ArrayList<>(uniqueColumnName.stream().toList());
     }
 
-    public List<String> rowNames() {
+    public ArrayList<String> rowNames() {
         Set<String> uniqueRowName = new HashSet<>();
         for (Cell cell : content.keySet()) {
             uniqueRowName.add(cell.getRow());
         }
-        return uniqueRowName.stream().toList();
+        return new ArrayList<>(uniqueRowName.stream().toList());
     }
 
     public T get(Cell cell) {

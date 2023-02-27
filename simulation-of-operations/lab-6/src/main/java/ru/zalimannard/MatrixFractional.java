@@ -1,6 +1,9 @@
 package ru.zalimannard;
 
+import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MatrixFractional extends Matrix<Double> {
@@ -190,8 +193,17 @@ public class MatrixFractional extends Matrix<Double> {
         String answer = "";
         int cellLength = Math.max(4, getMaxLength() + 3);
         String horizontalLine = String.join("", Collections.nCopies((cellLength + 3) * (width() + 1) + 1, "~"));
-        List<String> columnNames = columnNames();
-        List<String> rowNames = rowNames();
+        ArrayList<String> columnNames = columnNames();
+        Collections.sort(columnNames);
+        ArrayList<String> rowNames = rowNames();
+        Collections.sort(rowNames);
+
+        if (Utils.isInteger(columnNames.get(0))) {
+            Collections.sort(columnNames, Comparator.comparing(Integer::valueOf));
+        }
+        if (Utils.isInteger(rowNames.get(0))) {
+            Collections.sort(rowNames, Comparator.comparing(Integer::valueOf));
+        }
 
         answer += horizontalLine + "\n";
         answer += "|  " + String.join("", Collections.nCopies(cellLength, " "));
