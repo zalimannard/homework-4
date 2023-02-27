@@ -147,6 +147,35 @@ public class Main {
         System.out.println("Применим симплекс-метод:");
         MatrixFractional simplexedMatrix = simplex(matrix);
 
+        List<Double> xList = new ArrayList<>();
+        for (int i = 0; i < simplexedMatrix.height() - 1; ++i) {
+            Cell cell = new Cell("C", "z" + (i + 1));
+            if (simplexedMatrix.get(cell) != null) {
+                xList.add(simplexedMatrix.get(cell));
+            } else {
+                xList.add(0.0);
+            }
+        }
+        System.out.println("Все x (значения из столбца C):");
+        System.out.println(xList);
+
+        List<Double> yList = new ArrayList<>();
+        for (int i = 0; i < (simplexedMatrix.width() - 1) / 2; ++i) {
+            Cell cell = new Cell("z" + ((i + (simplexedMatrix.width() - 1) / 2) % (simplexedMatrix.width() - 1) + 1), "Fun");
+            yList.add(simplexedMatrix.get(cell));
+        }
+        System.out.println("Все y (значения из строки Fun):");
+        System.out.println(yList);
+
+        System.out.println("Линейная форма оптимальных планов (сумма x-ов): " + sumList(xList));
+        System.out.println("Линейная форма оптимальных планов (сумма y-ов): " + sumList(yList));
+
+        double gameCost = 1 / sumList(xList);
+        System.out.println("Цена игры: " + gameCost);
+
+        System.out.println("Оптимальная смешанная стратегия 1 игрока: " + multiplyList(xList, gameCost));
+        System.out.println("Оптимальная смешанная стратегия 2 игрока: " + multiplyList(yList, gameCost));
+
         return matrix;
     }
 
@@ -306,6 +335,22 @@ public class Main {
         }
 
         return matrix;
+    }
+
+    private static double sumList(List<Double> list) {
+        double answer = 0.0;
+        for (double value : list) {
+            answer += value;
+        }
+        return answer;
+    }
+
+    private static List<Double> multiplyList(List<Double> list, double value) {
+        List<Double> answer = new ArrayList<>();
+        for (int i = 0; i < list.size(); ++i) {
+            answer.add(list.get(i) * value);
+        }
+        return answer;
     }
 
     private static MatrixFractional genSimplexTable(MatrixFractional targetMatrix) {
