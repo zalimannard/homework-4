@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Graph {
 
-    private ArrayList<Node> nodes;
-    private ArrayList<Edge> edges;
+    private ArrayList<Node> nodes = new ArrayList<>();
+    private ArrayList<Edge> edges = new ArrayList<>();
 
     public void createNode(String name) {
         nodes.add(new Node(name));
@@ -25,6 +25,15 @@ public class Graph {
                 edge.setWeight(weight);
             }
         }
+    }
+
+    public Edge getEdge(Node begin, Node end) {
+        for (Edge edge : getEdges()) {
+            if ((edge.getBegin().equals(begin)) && (edge.getEnd().equals(end))) {
+                return new Edge(edge);
+            }
+        }
+        throw new RuntimeException("Нет такого ребра");
     }
 
     public ArrayList<Node> getNodes() {
@@ -74,6 +83,14 @@ public class Graph {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "Graph{" +
+                "nodes=" + nodes +
+                ", edges=" + edges +
+                '}';
     }
 
 }
