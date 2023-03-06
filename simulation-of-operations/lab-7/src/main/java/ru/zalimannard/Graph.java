@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Graph {
 
-    private ArrayList<Node> nodes = new ArrayList<>();
-    private ArrayList<Edge> edges = new ArrayList<>();
+    private final ArrayList<Node> nodes = new ArrayList<>();
+    private final ArrayList<Edge> edges = new ArrayList<>();
 
     public void createNode(String name) {
         nodes.add(new Node(name));
@@ -19,7 +19,7 @@ public class Graph {
         }
     }
 
-    public void setEdge(Edge targetEdge, int weight) {
+    public void setEdgeWeight(Edge targetEdge, int weight) {
         for (Edge edge : getEdges()) {
             if (edge.equals(targetEdge)) {
                 edge.setWeight(weight);
