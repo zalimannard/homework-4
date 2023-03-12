@@ -22,6 +22,12 @@ public class Edge {
         this.setBandwidth(bandwidth);
     }
 
+    public Edge(String begin, String end, Integer bandwidth) {
+        this.begin = begin;
+        this.end = end;
+        this.setBandwidth(bandwidth);
+    }
+
     public Edge(String begin, String end, Integer weight, Integer bandwidth, Integer flow) {
         this.begin = begin;
         this.end = end;

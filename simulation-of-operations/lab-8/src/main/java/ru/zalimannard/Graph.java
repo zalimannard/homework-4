@@ -32,6 +32,16 @@ public class Graph {
         edges.add(newEdge);
     }
 
+    public void addEdge(String begin, String end, Integer weight) {
+        for (int i = edges.size() - 1; i >= 0; --i) {
+            if (edges.get(i).equals(new Edge(begin, end))) {
+                return;
+            }
+        }
+        Edge newEdge = new Edge(begin, end, weight);
+        edges.add(newEdge);
+    }
+
     public void delEdge(String begin, String end) {
         for (int i = edges.size() - 1; i >= 0; --i) {
             if (edges.get(i).equals(new Edge(begin, end))) {
