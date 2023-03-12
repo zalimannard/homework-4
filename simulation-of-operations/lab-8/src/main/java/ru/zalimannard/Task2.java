@@ -58,6 +58,10 @@ public abstract class Task2 {
         System.out.println(newSumFlow);
         System.out.println("Напомню, что было");
         System.out.println(sumFlowAfterRandomFill);
+        System.out.println("Это максимальный поток, ответ на 1 подзадачу");
+        System.out.println();
+        System.out.println("На вторую подзадачу ответ - путь 5->6");
+        System.out.println(graph.getEdge("5", "6").getFlow());
     }
 
     private static Graph randomFill(Graph graph) {
