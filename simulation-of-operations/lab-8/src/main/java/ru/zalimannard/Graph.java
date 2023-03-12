@@ -47,6 +47,10 @@ public class Graph {
         return edges.get(edges.indexOf(new Edge(begin, end)));
     }
 
+    public ArrayList<Edge> getEdges() {
+        return new ArrayList<>(edges);
+    }
+
     public void setWeight(String begin, String end, Integer weight) {
         for (int i = edges.size() - 1; i >= 0; --i) {
             if (edges.get(i).equals(new Edge(begin, end))) {
@@ -104,7 +108,7 @@ public class Graph {
 
         ArrayList<Edge> answer = new ArrayList<>();
         for (Edge edge : edges) {
-            if ((edge.getBegin().equals(nodeName)) && (edge.getWeight() != null) && (edge.getBandwidth() != 0)) {
+            if ((edge.getBegin().equals(nodeName)) && (edge.getWeight() != null) && (edge.getBandwidth() != null)) {
                 Edge newEdgeForAnswer = new Edge(edge);
                 answer.add(newEdgeForAnswer);
             }
