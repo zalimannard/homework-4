@@ -3,14 +3,13 @@ package ru.zalimannard;
 public class Main {
 
     public static void main(String[] args) {
-        double personInMinute = 0.4;
         double timeForPerson = 2.5;
         System.out.println("Если n равно 1: --------------------------------------------------");
-        calc(1, personInMinute, timeForPerson);
+        calc(1, 0.4, timeForPerson);
         System.out.println();
 
         System.out.println("Если n равно 2: --------------------------------------------------");
-        calc(2, personInMinute, timeForPerson);
+        calc(2, 0.8, timeForPerson);
         System.out.println();
     }
 
