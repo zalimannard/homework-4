@@ -4,7 +4,7 @@
 #include "device_launch_parameters.h"
 #include <stdio.h>
 
-#define ARR_SIZE 5
+#define ARR_SIZE 1000000
 #define BLOCK_SIZE 1024
 
 __global__ void sort (long long* data)
@@ -38,7 +38,16 @@ __global__ void sort (long long* data)
 
 int main()
 {
-    long long arr[] = { 9, 8, 4, 9, 3  };
+    long long arr[1000000];
+
+    FILE* f = fopen("../input.txt", "rt");
+    long long readIndex = 0;
+    long long temp = 0;
+    while (fscanf(f, "%lld", &temp) == 1) {
+        arr[readIndex] = temp;
+        ++readIndex;
+    }
+
     #if defined(DEBUG)
         printf("\nИзначальный массив:\n");
         printf("Размер массива: %lld\n", ARR_SIZE);
