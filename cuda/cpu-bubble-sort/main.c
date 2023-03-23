@@ -41,7 +41,15 @@ int main(void)
         printf("Запуск в обычном режиме\n");
     #endif
 
-    long long arr[] = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0  };
+    long long arr[1000000];
+
+    FILE* f = fopen("../input.txt", "rt");
+    long long readIndex = 0;
+    long long temp = 0;
+    while (fscanf(f, "%lld", &temp) == 1) {
+        arr[readIndex] = temp;
+        ++readIndex;
+    }
 
     long long arrSize = sizeof(arr) / sizeof(arr[0]);
 
