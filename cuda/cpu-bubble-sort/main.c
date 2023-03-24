@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-#define ARR_SIZE (long int) 1000
+#define ARR_SIZE (long int) 1024
 
 struct timeval tval_before, tval_after, tval_result;
 
