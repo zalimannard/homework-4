@@ -1,4 +1,4 @@
-#define FULL
+//#define FULL
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
@@ -115,7 +115,7 @@ __global__ void sort (long int* data, unsigned long long* operations)
 
 int main()
 {
-    printf("Параллельная сортировка пузырьком на GPU\n");
+    printf("Битонная сортировка на GPU\n");
     printf("Размер массива: %ld\n", ARR_SIZE);
 
     #if defined(FULL)
