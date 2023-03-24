@@ -1,0 +1,9 @@
+cpu-bubble-sort/a.out
+cpu-quick-sort/a.out
+gpu-parallel-bubble-sort/a.out
+gpu-bitonic-sort/a.out
+
+report/kolesnikov-d-a-cuda-report.toc
+report/kolesnikov-d-a-cuda-report.aux
+report/kolesnikov-d-a-cuda-report.out
+report/kolesnikov-d-a-cuda-report.log
