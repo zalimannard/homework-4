@@ -9,30 +9,38 @@
 
 __global__ void sort (long long* data)
 {
-    long long iThread = blockIdx.x * BLOCK_SIZE + threadIdx.x;
-    __syncthreads();
+    long long operationOnThread = ARR_SIZE / BLOCK_SIZE / 2 + 1;
+
     for (long long i = 0; i < ARR_SIZE / 2 + 1; ++i) {
-        long long realIndex = iThread * 2;
-        long long nextIndex = realIndex + 1;
-        if (nextIndex < ARR_SIZE) {
-            if (data[realIndex] > data[nextIndex]) {
-                long long tmp = data[realIndex];
-                data[realIndex] = data[nextIndex];
-                data[nextIndex] = tmp;
+
+        for (long long iOperation = 0; iOperation < operationOnThread; ++iOperation) {
+            long long realIndex = (BLOCK_SIZE * iOperation + threadIdx.x) * 2;
+            long long nextIndex = realIndex + 1;
+            if (nextIndex < ARR_SIZE) {
+                if (data[realIndex] > data[nextIndex]) {
+                    long long tmp = data[realIndex];
+                    data[realIndex] = data[nextIndex];
+                    data[nextIndex] = tmp;
+                }
             }
         }
+
         __syncthreads();
 
-        ++realIndex;
-        ++nextIndex;
-        if (nextIndex < ARR_SIZE) {
-            if (data[realIndex] > data[nextIndex]) {
-                long long tmp = data[realIndex];
-                data[realIndex] = data[nextIndex];
-                data[nextIndex] = tmp;
+        for (long long iOperation = 0; iOperation < operationOnThread; ++iOperation) {
+            long long realIndex = (BLOCK_SIZE * iOperation + threadIdx.x) * 2 + 1;
+            long long nextIndex = realIndex + 1;
+            if (nextIndex < ARR_SIZE) {
+                if (data[realIndex] > data[nextIndex]) {
+                    long long tmp = data[realIndex];
+                    data[realIndex] = data[nextIndex];
+                    data[nextIndex] = tmp;
+                }
             }
         }
+
         __syncthreads();
+
     }
 }
 
@@ -75,7 +83,7 @@ int main()
     cudaEventRecord(start, 0);
 
 
-    sort<<< ARR_SIZE / BLOCK_SIZE / 2 + 1, BLOCK_SIZE >>>(array);
+    sort<<< 1, BLOCK_SIZE >>>(array);
     cudaMemcpy(arr, array, ARR_SIZE * sizeof(long long), cudaMemcpyDeviceToHost);
 
     cudaEventRecord(stop,0);
