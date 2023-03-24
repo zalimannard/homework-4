@@ -1,47 +1,52 @@
-#define DEBUG
+//#define FULL
 
 #include <stdio.h>
 #include <sys/time.h>
 
+#define ARR_SIZE (long long) 100
+
 struct timeval tval_before, tval_after, tval_result;
 
-long long sort(long long size, long long arr[]) {
+long long sort(long long arr[]) {
     long long operations = 0;
-    for (long long i = 0; i < size - 1; ++i) {
-        #if defined(DEBUG)
-            ++operations;
+
+    for (long long i = 0; i < ARR_SIZE - 1; ++i) {
+        #if defined(FULL)
+            operations += 2;
         #endif
-        for (long long j = 0; j < size - 1; ++j) {
-            #if defined(DEBUG)
-                ++operations;
+        for (long long j = 0; j < ARR_SIZE - 1; ++j) {
+            #if defined(FULL)
+                operations += 2;
             #endif
             if (arr[j] > arr[j + 1]) {
                 long long tmp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = tmp;
-                #if defined(DEBUG)
+                #if defined(FULL)
                     operations += 3;
                 #endif
             }
-            #if defined(DEBUG)
+            #if defined(FULL)
                 ++operations;
             #endif
         }
     }
+
     return operations;
 }
 
 int main(void)
 {
-    printf("Сортировка пузырьком на CPU\n\n");
+    printf("Сортировка пузырьком на CPU\n");
+    printf("Размер массива: %lld\n", ARR_SIZE);
 
-    #if defined(DEBUG)
-        printf("Запуск в режиме отладки\n");
+    #if defined(FULL)
+        printf("Запуск в медленном режиме\n\n");
     #else
-        printf("Запуск в обычном режиме\n");
+        printf("Запуск в быстром режиме\n\n");
     #endif
 
-    long long arr[1000000];
+    long long arr[ARR_SIZE];
 
     FILE* f = fopen("../input.txt", "rt");
     long long readIndex = 0;
@@ -51,14 +56,11 @@ int main(void)
         ++readIndex;
     }
 
-    long long arrSize = sizeof(arr) / sizeof(arr[0]);
-
-    #if defined(DEBUG)
+    #if defined(FULL)
         printf("\nИзначальный массив:\n");
-        printf("Размер массива: %lld\n", arrSize);
         long long sizeForPrintf = 100;
-        if (sizeForPrintf > arrSize) {
-            sizeForPrintf = arrSize;
+        if (sizeForPrintf > ARR_SIZE) {
+            sizeForPrintf = ARR_SIZE;
         }
         printf("Массив/Первые 100 его элементов:\n");
         for (long long i = 0; i < sizeForPrintf; ++i) {
@@ -69,11 +71,11 @@ int main(void)
 
     gettimeofday(&tval_before, NULL);
 
-    long long operations = sort(arrSize, arr);
+    long long operations = sort(arr);
 
     gettimeofday(&tval_after, NULL);
 
-    #if defined(DEBUG)
+    #if defined(FULL)
         printf("\nОтсортированный массив:\n");
         printf("Массив/Первые 100 его элементов:\n");
         for (long long i = 0; i < sizeForPrintf; ++i) {
@@ -88,4 +90,3 @@ int main(void)
 
     return 0;
 }
-
