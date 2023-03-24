@@ -1,109 +1,116 @@
-#define DEBUG
+//#define FULL
 
 #include <stdio.h>
 #include <sys/time.h>
 
+#define ARR_SIZE (long int) 1000
+
 struct timeval tval_before, tval_after, tval_result;
 
-long long sort(long long arr[], long long first, long long last) {
-    long long operations = 0;
-    long long pivot = first;
-    long long i = first;
-    long long j = last;
+long int sort(long int arr[], long int first, long int last)
+{
+    long int operations = 0;
+    long int i = first;
+    long int j = last;
+    long int pivot = last;
+    long int tmp = 0;
 
     if (first < last) {
         while (i < j) {
-            #if defined(DEBUG)
+            #if defined(FULL)
                 ++operations;
             #endif
-
-            while ((arr[i] <= arr[pivot]) && (i < last)) {
-                ++i;
-                #if defined(DEBUG)
-                    operations += 2;
-                #endif
+            while (arr[i] <= arr[pivot] && i < last) {
+                i++;
             }
-
+            #if defined(FULL)
+                operations += 2;
+            #endif
             while (arr[j] > arr[pivot]) {
-                --j;
-                #if defined(DEBUG)
-                    operations += 2;
+                j--;
+                #if defined(FULL)
+                    ++operations;
                 #endif
             }
+            #if defined(FULL)
+                ++operations;
+            #endif
             if (i < j) {
-                long long tmp = arr[i];
+                tmp = arr[i];
                 arr[i] = arr[j];
                 arr[j] = tmp;
-                #if defined(DEBUG)
-                    operations += 4;
+                #if defined(FULL)
+                    operations += 3;
                 #endif
             }
+            #if defined(FULL)
+                ++operations;
+            #endif
         }
-        long long tmp = arr[pivot];
+        tmp = arr[pivot];
         arr[pivot] = arr[j];
         arr[j] = tmp;
-        #if defined(DEBUG)
-            operations += 4;
+        #if defined(FULL)
+            operations += 3;
         #endif
         operations += sort(arr, first, j - 1);
         operations += sort(arr, j + 1, last);
     }
-
     return operations;
 }
 
 int main(void)
 {
-    printf("Быстрая сортировка на CPU\n\n");
+    printf("Быстрая сортировка на CPU\n");
+    printf("Размер массива: %ld\n", ARR_SIZE);
 
-    #if defined(DEBUG)
-        printf("Запуск в режиме отладки\n");
+    #if defined(FULL)
+        printf("Запуск в медленном режиме\n\n");
     #else
-        printf("Запуск в обычном режиме\n");
+        printf("Запуск в быстром режиме\n\n");
     #endif
 
-    long long arr[1000000];
+    long int arr[ARR_SIZE];
 
     FILE* f = fopen("../input.txt", "rt");
-    long long readIndex = 0;
-    long long temp = 0;
-    while (fscanf(f, "%lld", &temp) == 1) {
+    long int readIndex = 0;
+    long int temp = 0;
+    while (fscanf(f, "%ld", &temp) == 1) {
         arr[readIndex] = temp;
         ++readIndex;
     }
 
-    long long arrSize = sizeof(arr)/sizeof(arr[0]);
-
-    #if defined(DEBUG)
+    #if defined(FULL)
         printf("\nИзначальный массив:\n");
-        printf("Размер массива: %lld\n", arrSize);
-        long long sizeForPrintf = 100;
-        if (sizeForPrintf > arrSize) {
-            sizeForPrintf = arrSize;
+        long int sizeForPrintf = 100;
+        if (sizeForPrintf > ARR_SIZE) {
+            sizeForPrintf = ARR_SIZE;
         }
         printf("Массив/Первые 100 его элементов:\n");
-        for (long long i = 0; i < sizeForPrintf; ++i) {
-            printf("%lld ", arr[i]);
+        for (long int i = 0; i < sizeForPrintf; ++i) {
+            printf("%ld ", arr[i]);
         }
+        printf("\n");
     #endif
 
     gettimeofday(&tval_before, NULL);
 
-    long long operations = sort(arr, 0, arrSize - 1);
+    long int operations = sort(arr, 0, ARR_SIZE - 1);
 
     gettimeofday(&tval_after, NULL);
 
-    #if defined(DEBUG)
+    #if defined(FULL)
         printf("\nОтсортированный массив:\n");
         printf("Массив/Первые 100 его элементов:\n");
-        for (long long i = 0; i < sizeForPrintf; ++i) {
-            printf("%lld ", arr[i]);
+        for (long int i = 0; i < sizeForPrintf; ++i) {
+            printf("%ld ", arr[i]);
         }
-        printf("Потребовалось операций: %lld\n", operations);
+        printf("\n");
+        printf("Потребовалось операций: %ld\n", operations);
     #endif
 
     timersub(&tval_after, &tval_before, &tval_result);
-    printf("Заняло %ld.%06ld секунд\n", (long int)tval_result.tv_sec, (long int)tval_result.tv_usec);
+    printf("Заняло %ld.%06ld секунд\n", (long int) tval_result.tv_sec, (long int) tval_result.tv_usec);
 
     return 0;
 }
