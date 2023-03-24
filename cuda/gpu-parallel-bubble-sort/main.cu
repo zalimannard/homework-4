@@ -4,7 +4,7 @@
 #include "device_launch_parameters.h"
 #include <stdio.h>
 
-#define ARR_SIZE 1024
+#define ARR_SIZE (long int) 65536
 #define BLOCK_SIZE 1024
 
 __global__ void sort (long int* data, unsigned long long* operations)
