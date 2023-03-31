@@ -7406,7 +7406,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<StopOption><![CDATA[Never]]></StopOption>
 				<InitialDate><![CDATA[1521158400000]]></InitialDate>	
 				<InitialTime><![CDATA[0.0]]></InitialTime>	
-				<FinalDate><![CDATA[1523842800000]]></FinalDate>	
+				<FinalDate><![CDATA[1521164400000]]></FinalDate>	
 				<FinalTime><![CDATA[100.0]]></FinalTime>	
 			</ModelTimeProperties>
 			<BypassInitialScreen>false</BypassInitialScreen>
