@@ -530,7 +530,7 @@ Other things featured by this model are:
 				<Connector>
 					<Id>1554118235694</Id>
 					<Name><![CDATA[connector9]]></Name>
-					<X>340</X><Y>1080</Y>
+					<X>730</X><Y>1000</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -557,40 +557,7 @@ Other things featured by this model are:
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>110</X><Y>0</Y></Point>
-					</Points>
-				</Connector>
-				<Connector>
-					<Id>1680010245719</Id>
-					<Name><![CDATA[connector7]]></Name>
-					<X>650</X><Y>1000</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[emergency_department]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[освободитьРегистратора]]></ItemName>
-					</SourceEmbeddedObjectReference>
-					<SourceConnectableItemReference>
-						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-						<ClassName><![CDATA[Release]]></ClassName>
-						<ItemName><![CDATA[out]]></ItemName>
-					</SourceConnectableItemReference>
-					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[emergency_department]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[кВыходу]]></ItemName>
-					</TargetEmbeddedObjectReference>
-					<TargetConnectableItemReference>
-						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-						<ClassName><![CDATA[MoveTo]]></ClassName>
-						<ItemName><![CDATA[in]]></ItemName>
-					</TargetConnectableItemReference>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>110</X><Y>0</Y></Point>
+						<Point><X>40</X><Y>0</Y></Point>
 					</Points>
 				</Connector>
 				<Connector>
@@ -647,7 +614,7 @@ Other things featured by this model are:
 					<TargetEmbeddedObjectReference>
 						<PackageName><![CDATA[emergency_department]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[освободитьМестоРегистраторов]]></ItemName>
+						<ItemName><![CDATA[освободитьЗал]]></ItemName>
 					</TargetEmbeddedObjectReference>
 					<TargetConnectableItemReference>
 						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
@@ -666,7 +633,7 @@ Other things featured by this model are:
 				<Connector>
 					<Id>1680010521467</Id>
 					<Name><![CDATA[connector11]]></Name>
-					<X>800</X><Y>1000</Y>
+					<X>650</X><Y>1000</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -693,11 +660,40 @@ Other things featured by this model are:
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>20</X><Y>0</Y></Point>
-						<Point><X>20</X><Y>30</Y></Point>
-						<Point><X>-530</X><Y>30</Y></Point>
-						<Point><X>-530</X><Y>80</Y></Point>
-						<Point><X>-470</X><Y>80</Y></Point>
+						<Point><X>70</X><Y>0</Y></Point>
+					</Points>
+				</Connector>
+				<Connector>
+					<Id>1680010245719</Id>
+					<Name><![CDATA[connector7]]></Name>
+					<X>480</X><Y>1000</Y>
+					<Label><X>10</X><Y>0</Y></Label>
+					<PublicFlag>false</PublicFlag>
+					<PresentationFlag>true</PresentationFlag>
+					<ShowLabel>false</ShowLabel>
+					<SourceEmbeddedObjectReference>
+						<PackageName><![CDATA[emergency_department]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[освободитьРегистратора]]></ItemName>
+					</SourceEmbeddedObjectReference>
+					<SourceConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[Release]]></ClassName>
+						<ItemName><![CDATA[out]]></ItemName>
+					</SourceConnectableItemReference>
+					<TargetEmbeddedObjectReference>
+						<PackageName><![CDATA[emergency_department]]></PackageName>
+						<ClassName><![CDATA[Main]]></ClassName>
+						<ItemName><![CDATA[кВыходу]]></ItemName>
+					</TargetEmbeddedObjectReference>
+					<TargetConnectableItemReference>
+						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
+						<ClassName><![CDATA[MoveTo]]></ClassName>
+						<ItemName><![CDATA[in]]></ItemName>
+					</TargetConnectableItemReference>
+					<Points>
+						<Point><X>0</X><Y>0</Y></Point>
+						<Point><X>130</X><Y>0</Y></Point>
 					</Points>
 				</Connector>
 				<Connector>
@@ -711,44 +707,11 @@ Other things featured by this model are:
 					<SourceEmbeddedObjectReference>
 						<PackageName><![CDATA[emergency_department]]></PackageName>
 						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[освободитьМестоРегистраторов]]></ItemName>
+						<ItemName><![CDATA[освободитьЗал]]></ItemName>
 					</SourceEmbeddedObjectReference>
 					<SourceConnectableItemReference>
 						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
 						<ClassName><![CDATA[Release]]></ClassName>
-						<ItemName><![CDATA[out]]></ItemName>
-					</SourceConnectableItemReference>
-					<TargetEmbeddedObjectReference>
-						<PackageName><![CDATA[emergency_department]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[вЗалОжидания2]]></ItemName>
-					</TargetEmbeddedObjectReference>
-					<TargetConnectableItemReference>
-						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-						<ClassName><![CDATA[MoveTo]]></ClassName>
-						<ItemName><![CDATA[in]]></ItemName>
-					</TargetConnectableItemReference>
-					<Points>
-						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>80</X><Y>0</Y></Point>
-					</Points>
-				</Connector>
-				<Connector>
-					<Id>1680010505892</Id>
-					<Name><![CDATA[connector10]]></Name>
-					<X>480</X><Y>1000</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<SourceEmbeddedObjectReference>
-						<PackageName><![CDATA[emergency_department]]></PackageName>
-						<ClassName><![CDATA[Main]]></ClassName>
-						<ItemName><![CDATA[вЗалОжидания2]]></ItemName>
-					</SourceEmbeddedObjectReference>
-					<SourceConnectableItemReference>
-						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-						<ClassName><![CDATA[MoveTo]]></ClassName>
 						<ItemName><![CDATA[out]]></ItemName>
 					</SourceConnectableItemReference>
 					<TargetEmbeddedObjectReference>
@@ -763,7 +726,7 @@ Other things featured by this model are:
 					</TargetConnectableItemReference>
 					<Points>
 						<Point><X>0</X><Y>0</Y></Point>
-						<Point><X>130</X><Y>0</Y></Point>
+						<Point><X>80</X><Y>0</Y></Point>
 					</Points>
 				</Connector>
 			</Connectors>
@@ -2821,7 +2784,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				</EmbeddedObject>
 				<EmbeddedObject>
 					<Id>1390832489783</Id>
-					<Name><![CDATA[освободитьМестоРегистраторов]]></Name>
+					<Name><![CDATA[освободитьЗал]]></Name>
 					<X>320</X><Y>980</Y>
 					<Label><X>-35</X><Y>-10</Y></Label>
 					<PublicFlag>false</PublicFlag>
@@ -2935,172 +2898,9 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					</QuantityColumn>
 				</EmbeddedObject>
 				<EmbeddedObject>
-					<Id>1390832533094</Id>
-					<Name><![CDATA[вЗалОжидания2]]></Name>
-					<X>440</X><Y>980</Y>
-					<Label><X>-20</X><Y>-10</Y></Label>
-					<PublicFlag>false</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>true</ShowLabel>
-					<ActiveObjectClass>
-						<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-						<ClassName><![CDATA[MoveTo]]></ClassName>
-					</ActiveObjectClass>
-					<GenericParameterSubstitute>
-						<GenericParameterSubstituteReference>
-							<PackageName><![CDATA[com.anylogic.libraries.processmodeling]]></PackageName>
-							<ClassName><![CDATA[MoveTo]]></ClassName>
-							<ItemName><![CDATA[1412336243157]]></ItemName>
-						</GenericParameterSubstituteReference>
-					</GenericParameterSubstitute>
-					<Parameters>
-						<Parameter>
-							<Name><![CDATA[destinationType]]></Name>
-							<Value Class="CodeValue">
-								<Code><![CDATA[self.DEST_NODE]]></Code>
-							</Value>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationNode]]></Name>
-							<Value Class="CodeValue">
-								<Code><![CDATA[waitingRoom]]></Code>
-							</Value>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationResource]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[onEnter]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[onExit]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[mode]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationAttractor]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationAgent]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationX]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationY]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationZ]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationNetwork]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[useOffsets]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[offsetX]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[offsetY]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[offsetZ]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[movementType]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[setSpeed]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[speed]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[tripTime]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationUseRotation]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationRotation]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationVerticalRotation]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[restoreSpeedOnArrival]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[onRemove]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationLatitude]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationLongitude]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationGeoPlaceName]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationInNetwork]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[straightMovement]]></Name>
-						</Parameter>
-						<Parameter>
-							<Name><![CDATA[destinationLevel]]></Name>
-						</Parameter>
-					</Parameters>
-					<ReplicationFlag>false</ReplicationFlag>
-					<Replication Class="CodeValue">
-						<Code><![CDATA[100]]></Code>
-					</Replication>
-					<CollectionType>ARRAY_LIST_BASED</CollectionType>
-					<InitialSpeedCode Class="CodeUnitValue">
-						<Code><![CDATA[10]]></Code>
-						<Unit Class="SpeedUnits"><![CDATA[MPS]]></Unit>
-					</InitialSpeedCode>
-					<InitialLocationType>AT_ANIMATION_POSITION</InitialLocationType>
-					<XCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</XCode>
-					<YCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</YCode>
-					<ZCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</ZCode>
-					<ColumnCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</ColumnCode>
-					<RowCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</RowCode>
-					<LatitudeCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</LatitudeCode>
-					<LongitudeCode Class="CodeValue">
-						<Code><![CDATA[0]]></Code>
-					</LongitudeCode>
-					<LocationNameCode Class="CodeValue">
-						<Code><![CDATA[""]]></Code>
-					</LocationNameCode>
-					<InitializationType>SPECIFIED_NUMBER</InitializationType>
-					<InitializationDatabaseTableQuery>
-						<TableReference>
-						</TableReference>
-					</InitializationDatabaseTableQuery>
-					<InitializationDatabaseType>ONE_AGENT_PER_DATABASE_RECORD</InitializationDatabaseType>
-					<QuantityColumn>
-					</QuantityColumn>
-				</EmbeddedObject>
-				<EmbeddedObject>
 					<Id>1390832566488</Id>
 					<Name><![CDATA[освободитьРегистратора]]></Name>
-					<X>610</X><Y>980</Y>
+					<X>440</X><Y>980</Y>
 					<Label><X>-15</X><Y>-10</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3215,7 +3015,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<EmbeddedObject>
 					<Id>1390832627242</Id>
 					<Name><![CDATA[кВыходу]]></Name>
-					<X>760</X><Y>980</Y>
+					<X>610</X><Y>980</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3378,7 +3178,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<EmbeddedObject>
 					<Id>1390832639674</Id>
 					<Name><![CDATA[выход]]></Name>
-					<X>450</X><Y>1070</Y>
+					<X>770</X><Y>990</Y>
 					<Label><X>-5</X><Y>-20</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3514,7 +3314,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<EmbeddedObject>
 					<Id>1554118232999</Id>
 					<Name><![CDATA[конец]]></Name>
-					<X>310</X><Y>1060</Y>
+					<X>700</X><Y>980</Y>
 					<Label><X>0</X><Y>-10</Y></Label>
 					<PublicFlag>false</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3602,7 +3402,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<Polyline>
 					<Id>1172663381340</Id>
 					<Name><![CDATA[polyline18]]></Name>
-					<X>430</X><Y>125</Y>
+					<X>425</X><Y>120</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>true</PresentationFlag>
@@ -3623,15 +3423,9 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					<FillMaterial>null</FillMaterial>
 					<Points>
 					   <Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>155</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>240</X><Y>0</Y><Z>0</Z></Point>
-					   <Point><X>240</X><Y>100</Y><Z>0</Z></Point>
-					   <Point><X>240</X><Y>140</Y><Z>0</Z></Point>
-					   <Point><X>140</X><Y>140</Y><Z>0</Z></Point>
-					   <Point><X>140</X><Y>180</Y><Z>0</Z></Point>
-					   <Point><X>240</X><Y>180</Y><Z>0</Z></Point>
-					   <Point><X>240</X><Y>240</Y><Z>0</Z></Point>
-					   <Point><X>0</X><Y>240</Y><Z>0</Z></Point>
+					   <Point><X>250</X><Y>0</Y><Z>0</Z></Point>
+					   <Point><X>250</X><Y>250</Y><Z>0</Z></Point>
+					   <Point><X>0</X><Y>250</Y><Z>0</Z></Point>
 					</Points>
 					<Closed>true</Closed>
 				</Polyline>
@@ -3985,9 +3779,9 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 						<Point><X>65</X><Y>0</Y><Z>0</Z></Point>
 						<Point><X>40</X><Y>0</Y><Z>0</Z></Point>
 						<Point><X>90</X><Y>0</Y><Z>0</Z></Point>
-						<Point><X>120</X><Y>0</Y><Z>0</Z></Point>
-						<Point><X>95</X><Y>0</Y><Z>0</Z></Point>
-						<Point><X>120</X><Y>-25</Y><Z>0</Z></Point>
+						<Point><X>130</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>105</X><Y>0</Y><Z>0</Z></Point>
+						<Point><X>130</X><Y>-25</Y><Z>0</Z></Point>
 					</Points>
 					<Bidirectional>true</Bidirectional>
 					<SpeedLimit>false</SpeedLimit>
@@ -4898,7 +4692,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 				<RectangleNode>
 					<Id>1390831103943</Id>
 					<Name><![CDATA[exitDoor]]></Name>
-					<X>665</X><Y>235</Y>
+					<X>675</X><Y>235</Y>
 					<Label><X>10</X><Y>0</Y></Label>
 					<PublicFlag>true</PublicFlag>
 					<PresentationFlag>false</PresentationFlag>
@@ -5430,14 +5224,14 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					</Width>
 					<Points>
 						<Point><X>0</X><Y>0</Y><Z>0</Z></Point>
-						<Point><X>0</X><Y>25</Y><Z>0</Z></Point>
 						<Point><X>0</X><Y>-25</Y><Z>0</Z></Point>
+						<Point><X>0</X><Y>-45</Y><Z>0</Z></Point>
 						<Point><X>0</X><Y>-35</Y><Z>0</Z></Point>
 						<Point><X>0</X><Y>-10</Y><Z>0</Z></Point>
 						<Point><X>25</X><Y>-35</Y><Z>0</Z></Point>
 						<Point><X>35</X><Y>-35</Y><Z>0</Z></Point>
 						<Point><X>10</X><Y>-35</Y><Z>0</Z></Point>
-						<Point><X>10.251</X><Y>-38.536</Y><Z>0</Z></Point>
+						<Point><X>10.250999999999976</X><Y>-38.536</Y><Z>0</Z></Point>
 					</Points>
 					<Bidirectional>true</Bidirectional>
 					<SpeedLimit>false</SpeedLimit>
@@ -6396,7 +6190,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12490271</Color>
-					<Text><![CDATA[Ожидание (минут)]]></Text>
+					<Text><![CDATA[Обработка (минут)]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>12</Size>
@@ -7573,7 +7367,7 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					<Z>0</Z>
 					<Rotation>0.0</Rotation>
 					<Color>-12490271</Color>
-					<Text><![CDATA[Emergency Department]]></Text>
+					<Text><![CDATA[Работа регистратуры]]></Text>
 					<Font>
 						<Name>SansSerif</Name>
 						<Size>20</Size>
@@ -7581,99 +7375,6 @@ mainMenu.setPos( viewArea.getX(), viewArea.getY() );]]></Body>
 					</Font>
 					<Alignment>LEFT</Alignment>
 				</Text>
-				<Text>
-					<Id>1172740805498</Id>
-					<Name><![CDATA[text2]]></Name>
-					<X>40</X><Y>60</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Rotation>0.0</Rotation>
-					<Color>-12237499</Color>
-					<Text><![CDATA[This simplistic model of an Emergency Department was designed primarily to show usage of different resource types and markup
-elements within a straightforward process built with the Process Modeling Library.
-
-The markup elements (paths, nodes, and attractors) drawn on top of the facility layout define locations and routes and are referenced
-by the model logic.  
-
-Resources used in this model are:
-
-  - Staff: Nurses, PAs and Technicians - of type moving [can move on their own]
-  - Rooms: Triage rooms, Express care rooms, X-ray room - of type static [cannot be moved]
-  - Equipment: Ultra sound devices - of type portable [can be moved by resources of type moving]
-
-Technicians have their own sub-process to prepare for the ultra sound process and wrap-up afterwards: see USoundProcess flowchart.
-
-The process is the following. Upon arrival, a patient registers and proceeds to the waiting room, from where he or she is escorted by
-the nurse to a triage room. After triage the patient proceeds to an express care (EC) room and then either X-ray or ultra sound is done
-with the help of a technician and a PA. X-Ray process requires the patient to go the X-Ray room, whereas ultra sound device is moved
-to the EC room where the patient is located.
-
-Other things featured by this model are:
-
-  - Hierarchical modeling: U-Sound and X-Ray processes are defined in separate blocks
-  - TimeMeasureStart/End blocks contain a histogram that is used for Length of stay measurement
-  - Menu bar and view areas are used for navigation
-
-]]></Text>
-					<Font>
-						<Name>SansSerif</Name>
-						<Size>12</Size>
-						<Style>0</Style>
-					</Font>
-					<Alignment>LEFT</Alignment>
-				</Text>
-				<Image>
-					<Id>1535473395356</Id>
-					<Name><![CDATA[image1]]></Name>
-					<X>20</X><Y>500</Y>
-					<Label><X>0</X><Y>-10</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D3D</DrawMode>
-					<OnClickCode><![CDATA[getExperimentHost().openWebSite("https://www.anylogic.com");]]></OnClickCode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<Width>200</Width>
-					<Height>75</Height>
-					<Rotation>0.0</Rotation>
-					<ImageFiles>
-						<ImageResourceReference>
-							<PackageName><![CDATA[emergency_department]]></PackageName>
-							<ClassName><![CDATA[AnyLogic model logo dark.png]]></ClassName>
-						</ImageResourceReference>
-					</ImageFiles>
-					<OriginalSize>false</OriginalSize>
-				</Image>
-				<Line>
-					<Id>1554121282286</Id>
-					<Name><![CDATA[line18]]></Name>
-					<X>0</X><Y>40</Y>
-					<Label><X>10</X><Y>0</Y></Label>
-					<PublicFlag>true</PublicFlag>
-					<PresentationFlag>true</PresentationFlag>
-					<ShowLabel>false</ShowLabel>
-					<DrawMode>SHAPE_DRAW_2D</DrawMode>
-					<EmbeddedIcon>false</EmbeddedIcon>
-					<Z>0</Z>
-					<ZHeight>10</ZHeight>
-					<LineWidth>1</LineWidth>
-					<LineColor>-12490271</LineColor>
-					<LineMaterial>null</LineMaterial>
-					<LineStyle>SOLID</LineStyle>
-					<BeginArrowSize>1</BeginArrowSize>
-					<BeginArrowStyle>0</BeginArrowStyle>
-					<EndArrowSize>1</EndArrowSize>
-					<EndArrowStyle>0</EndArrowStyle>
-					<Dx>900</Dx>
-					<Dy>0</Dy>
-					<Dz>0</Dz>
-				</Line>
 			</Presentation>
 
 			<Parameters>			
@@ -7703,7 +7404,7 @@ Other things featured by this model are:
 			</PresentationProperties>
 			<ModelTimeProperties>
 				<StopOption><![CDATA[Never]]></StopOption>
-				<InitialDate><![CDATA[1523836800000]]></InitialDate>	
+				<InitialDate><![CDATA[1521158400000]]></InitialDate>	
 				<InitialTime><![CDATA[0.0]]></InitialTime>	
 				<FinalDate><![CDATA[1523842800000]]></FinalDate>	
 				<FinalTime><![CDATA[100.0]]></FinalTime>	
@@ -7750,10 +7451,6 @@ Other things featured by this model are:
 		</Resource>
 		<Resource>
 			<Path><![CDATA[3d/nurse.dae]]></Path>
-			<ReferencedFromUserCode>false</ReferencedFromUserCode>
-		</Resource>
-		<Resource>
-			<Path><![CDATA[AnyLogic model logo dark.png]]></Path>
 			<ReferencedFromUserCode>false</ReferencedFromUserCode>
 		</Resource>
 	</ModelResources>
